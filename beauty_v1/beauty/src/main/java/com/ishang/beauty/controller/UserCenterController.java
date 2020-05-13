@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ishang.beauty.entity.Blog;
 import com.ishang.beauty.entity.User;
@@ -39,13 +40,12 @@ public class UserCenterController {
 	 * @RequestMapping("/user_follow") public String user_follow() { return
 	 * "user/user_follow";
 	 */
-
-	// 修改头像
-	@RequestMapping("/toupdateimg")
-	public String updateImg() {
-		return "updateimg";
-	}
-
+	/*
+	 * // 修改头像
+	 * 
+	 * @RequestMapping("/toupdateimg") public String updateImg() { return
+	 * "updateimg.jsp"; }
+	 */
 	// 头像上传
 	@RequestMapping("/upload")
 	public String upload(User user, HttpServletRequest request, Model model) throws IllegalStateException, IOException {
@@ -82,14 +82,14 @@ public class UserCenterController {
 
 		service.updateImg(user);
 		// model.addAttribute("image", user);
-		return "user/user_setting";
+		return "user/user_setting.jsp";
 
 	}
 
 //跳转到个人中心
 	@RequestMapping("/tocenter")
 	public String tocenter(Model model) {
-		return "usercenter";
+		return "usercenter.jsp";
 	}
 
 	// 获取查询到的头像
@@ -100,7 +100,7 @@ public class UserCenterController {
 		System.out.println(getpic);
 		session.setAttribute("getpic", getpic);
 		// model.addAttribute("getpic", getpic);
-		return "usercenter";
+		return "usercenter.jsp";
 
 	}
 
@@ -110,7 +110,7 @@ public class UserCenterController {
 		System.out.println(getpic);
 		session.setAttribute("getpic", getpic);
 		// model.addAttribute("getpic", getpic);
-		return "index";
+		return "index.jsp";
 
 	}
 
@@ -124,7 +124,7 @@ public class UserCenterController {
 		System.out.println("以上为user内容，包含id和password");
 		service.updateone(user);
 		//留空间给cookie，之后做
-		return "usercenter";
+		return "usercenter.jsp";
 
 	}
 
@@ -144,7 +144,7 @@ public class UserCenterController {
 
 		System.out.println(user);
 		service.updateone(user);
-		return "index";
+		return "index.jsp";
 	}
 	/*
 	 * //读取用户信息
@@ -161,20 +161,20 @@ public class UserCenterController {
 	// 转到user_info.jsp
 	@RequestMapping("/toinfo")
 	public String ToInfo() {
-		return "user/user_info";
+		return "user/user_info.jsp";
 
 	}
 
 	// 转到user_setting.jsp
 	@RequestMapping("/tosetting")
 	public String ToSetting() {
-		return "user/user_setting";
+		return "user/user_setting.jsp";
 
 	}
 
 	@RequestMapping("/tolove")
 	public String Tolove() {
-		return "user/user_love";
+		return "user/user_love.jsp";
 
 	}
 
@@ -194,21 +194,24 @@ public class UserCenterController {
 //list本身就是一个列表
 		System.out.println(flist);
 
-		return "user/user_follow";
+		return "user/user_follow.jsp";
 	}
 	@RequestMapping("/uploader")
 	public String Uploader(@RequestParam Integer uploaderid,Model model) {
 		int fan=service.fancount(uploaderid);
 		System.out.println(fan);
-		//List<UserFollow> fanlist=service.FanList(uploaderid);
+		
 		List<User> uplist=service.selectbyid(uploaderid);
-		//System.out.println(fanlist);
+		
 		System.out.println(uplist);
 		model.addAttribute("fan", fan);
-		//model.addAttribute("fanlist", fanlist);
+		
 		model.addAttribute("uplist", uplist);
 		
-		return "uploader";
+		
+		
+		
+		return "uploader.jsp";
 		
 	}
 	//通过用户id查询password，用于修改密码(user_setting)
@@ -217,27 +220,119 @@ public class UserCenterController {
 		List<User> list=service.findbyid(id);
 		String pwd=list.get(0).getPassword();
 		session.setAttribute("pwd", pwd);
-		return "user/user_setting";
+		return "user/user_setting.jsp";
 	}
 	//将结果放到uploaderFanList中
 	@RequestMapping("/upfanlist")
 	public String upfanlist(@RequestParam Integer id,Model model) {
+		//up主的id不是登录的id
 		int fan=service.fancount(id);
 		System.out.println(fan);
 		List<UserFollow> fanlist=service.FanList(id);
+		
 		List<User> uplist=service.selectbyid(id);
 		System.out.println(fanlist);
+		
+		
 		System.out.println(uplist);
 		model.addAttribute("fan", fan);
+		//显示粉丝信息
+		
 		model.addAttribute("fanlist", fanlist);
+		//显示up主信息
 		model.addAttribute("uplist", uplist);
-		return "uploaderFanList";
+		return "uploaderFanList.jsp";
 		
 	}
-
+    //关注功能前，判断是否关注
+	@RequestMapping("/subscribe")
+	public String subscribe(@RequestParam Integer followerid,@RequestParam Integer uploaderid,Model model, HttpSession session) {
+		//传入两个id，followerid-关注>uploaderid
+		//判断是否已经关注
+		List<UserFollow> sub=service.Subscribe(followerid, uploaderid);
+		/*
+		 * if(sub==null) { //未关注的话，插入新的关注信息 int count=service.subinsert(followerid,
+		 * uploaderid); System.out.println(count); }
+		 */
+		String text="";
+		if(sub.isEmpty())text="未关注";
+		else {
+			text="已关注";
+		}
+		System.out.println(text);
+		session.setAttribute("text", text);
+		session.setAttribute("sub", sub);
+		model.addAttribute("sub", sub);
+		System.out.println(sub);
+		return "uploader.jsp";
+	}
+	//followerid不变，uploaderid应该从遍历的列表中取，只是返回两个不同的页面(似乎不能共用一个)
+	@RequestMapping("/subscribelist")
+	public String subscribe1(@RequestParam Integer followerid,@RequestParam Integer uploaderid,Model model, HttpSession session) {
+		//传入两个id，followerid-关注>uploaderid
+		//判断是否已经关注
+		session.removeAttribute("text1");
+		
+		List<UserFollow> sub=service.Subscribe(followerid, uploaderid);
+		//如果未关注->text=1,关注->text=2
+		String text1;
+		if(sub.isEmpty())text1="未关注";
+		else {
+			text1="已关注";
+		}
+		
+		System.out.println(text1);
+		
+		session.setAttribute("text1", text1);
+		session.setAttribute("sub", sub);
+		model.addAttribute("sub", sub);
+		System.out.println(sub);
+		return "uploaderFanList.jsp";
+	}
 	
 	
 	
+	//如果是未关注->，调用此接口
+	@RequestMapping("/subinsert")
+	public String subins(@RequestParam Integer followerid,@RequestParam Integer uploaderid,Model model, HttpSession session) {
+		int ins=service.subinsert(followerid, uploaderid);
+		model.addAttribute("success", "已成功关注");
+		return "uploader.jsp";
+		
+	}
+	//同上，用于fanlist
+		@RequestMapping("/subinsert1")
+		public String subins1(@RequestParam Integer followerid,@RequestParam Integer uploaderid,Model model, HttpSession session) {
+			int ins=service.subinsert(followerid, uploaderid);
+			model.addAttribute("success", "已成功关注");
+			return "uploaderFanList.jsp";
+			
+		}
+	
+	
+	
+	
+	//如果是已经关注->取消关注，调用此接口,需要参数:2个
+	@RequestMapping("/subdelete")
+	public String subdel(@RequestParam Integer followerid,@RequestParam Integer uploaderid,Model model, HttpSession session) {
+		int del=service.subdelete(followerid, uploaderid);
+	//sql语句执行之后，返回uploader.jsp时会自动判断（自我认为）
+		model.addAttribute("success", "已取消关注");
+		return "uploader.jsp";
+		
+		
+	}
+	//如果是已经关注->取消关注，调用此接口,需要参数:2个
+		@RequestMapping("/subdelete1")
+		public String subdel1(@RequestParam Integer followerid,@RequestParam Integer uploaderid,Model model, HttpSession session) {
+			int del=service.subdelete(followerid, uploaderid);
+		//sql语句执行之后，返回uploader.jsp时会自动判断（自我认为）
+			model.addAttribute("success", "已取消关注");
+			return "uploaderFanList.jsp";
+			
+			
+		}
+		
 	
 	
 	

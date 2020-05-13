@@ -103,6 +103,21 @@ public class UserServiceImpl implements UserService {
 		return followdao.selectFanList(id);
 	}
 
+	public List<UserFollow> Subscribe(Integer followerid, Integer uploaderid) {
+		// TODO 自动生成的方法存根
+		return followdao.subscribe(followerid, uploaderid);
+	}
+
+	public int subinsert(Integer followerid, Integer uploaderid) {
+		// TODO 自动生成的方法存根
+		return followdao.subinsert(followerid, uploaderid);
+	}
+
+	public int subdelete(Integer followerid, Integer uploaderid) {
+		// TODO 自动生成的方法存根
+		return followdao.subdelete(followerid, uploaderid);
+	}
+
 	
 
 

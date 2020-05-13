@@ -71,9 +71,9 @@ public interface UserService {
 	 * List<Blog> blogList();
 	 */
 	
+	List<UserFollow> Subscribe(Integer followerid,Integer uploaderid);
 	
+	int subinsert(Integer followerid,Integer uploaderid);
 	
-	
-	
-	
+	int subdelete(Integer followerid,Integer uploaderid);
 }

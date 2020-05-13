@@ -85,7 +85,22 @@ where uploaderid=#{uploaderid}
 )
  </select>
  
+ <!-- 查询是否已经关注,返回列表类型 -->
+ <select id="subscribe" resultMap="BaseResultMap">
+ select *
+from user_follow
+where uploaderid=#{uploaderid} and followerid=#{followerid}
+ </select>
+ <!-- 插入新的关注字段 -->
+  <insert id="subinsert">
+  insert into user_follow(followerid,uploaderid)
+  values(#{followerid},#{uploaderid})
   
-  
-  
+  </insert>
+  <!-- 若已关注删除一行数据 -->
+  <delete id="subdelete" parameterType="java.lang.Integer">
+  delete from user_follow
+WHERE followerid=#{followerid}
+and uploaderid=#{uploaderid}
+  </delete>
 </mapper>

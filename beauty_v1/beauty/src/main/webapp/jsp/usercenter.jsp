@@ -204,7 +204,7 @@
 			}
 			return "";
 
-		};
+		}
 	</script>
 </body>
 </html>
