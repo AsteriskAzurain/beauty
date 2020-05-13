@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 	
+<jsp:directive.page import="java.net.URLDecoder"/>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,7 +61,7 @@
 					<!-- //logo -->
 					<div class="d-flex mt-lg-1 mt-sm-2 mt-3 justify-content-center">
 					<!-- 头像 -->
-					<img src="<%=path%>/images/userimg/18470736f72f497ab6019a616b856456.jpeg" class="headpic">
+					<img src="<%=path%>/${getpic}" class="headpic">
 					<label id="welcomemsg" class="welcomemsg" style="color:#705ecf"></label>
 					
 						<!-- search -->
@@ -74,7 +76,7 @@
 						<!-- //search -->
 						<!-- 登出&个人中心 -->
 						
-						<a class="dwn-w3ls btn mr-1" href="${pageContext.request.contextPath}/jsp/usercenter.jsp" target="_blank">
+						<a class="dwn-w3ls btn mr-1" href="${pageContext.request.contextPath}/center/tocenter" target="_blank">
 							<span class="fa fa-user-circle-o" title="个人中心"></span>
 						</a> 
 						<a class="dwn-w3ls btn" href="${pageContext.request.contextPath}/user/logout" target="_self">
@@ -102,23 +104,23 @@
 				<div class="carousel-item active">
 					<img src="https://static.runoob.com/images/mix/img_fjords_wide.jpg">
 					<div class="carousel-caption">
-						<h3>首页轮播图第一张图片</h3>
-						<p>描述文字</p>
+						<h3>${reclist[0].title }</h3>
+						<p>${ fn:substring(reclist[0].content, 0, 20) } ...</p>
 					</div>
 				</div>
 				<div class="carousel-item">
 					<img src="https://static.runoob.com/images/mix/img_nature_wide.jpg">
 					<div class="carousel-caption">
-						<h3>首页轮播图第二张图片</h3>
-						<p>描述文字</p>
+						<h3>${reclist[1].title }</h3>
+						<p>${ fn:substring(reclist[1].content, 0, 20) } ...</p>
 					</div>
 				</div>
 				<div class="carousel-item">
 					<img
 						src="https://static.runoob.com/images/mix/img_mountains_wide.jpg">
 					<div class="carousel-caption">
-						<h3>首页轮播图第三张图片</h3>
-						<p>欢迎你</p>
+						<h3>${reclist[2].title }</h3>
+						<p>${ fn:substring(reclist[2].content, 0, 20) } ...</p>
 					</div>
 				</div>
 			</div>
@@ -216,13 +218,12 @@
 			<div class="d-md-flex px-md-3 position-relative text-center">
 				<!-- copyright -->
 				<div class="copy_right mx-md-auto mb-md-0 mb-3">
-					<p class="text-bl let">Copyright &copy; 2020. reachableBeauty
-						All rights reserved.</p>
+					<p class="text-bl let">Copyright &copy; 2020. reachableBeauty All rights reserved.</p>
 				</div>
 				<!-- //copyright -->
 				<!-- move top icon -->
-				<a href="#home" class="move-top text-center"> <span
-					class="fa fa-level-up" aria-hidden="true"></span>
+				<a href="#home" class="move-top text-center"> 
+					<span class="fa fa-level-up" aria-hidden="true"></span>
 				</a>
 				<!-- //move top icon -->
 			</div>
@@ -231,28 +232,33 @@
 	<!-- //copyright bottom -->
 
 	<script src="<%=path%>/js/custom/getcookie.js"></script>
-	
+
 	<script type="text/javascript">
 		$(function(){
 			var cookiestr = getCookie("user");
-			if(cookiestr!="")
+			if(cookiestr!=""){
 				var cookiename=cookiestr.split("#")[0];
-			$("#welcomemsg").text("欢迎您,"+cookiename);	
+				cookiename=decodeURIComponent(cookiename)
+				$("#welcomemsg").text("欢迎您,"+cookiename);	
+			}
 		});
-		
-
-		//获取select到的
 	</script>
 
 	<script type="text/javascript">
-	//String target= "../index?userid="+result.get(0).getId();
-			$(function() {
+		$(function() {
 
 			var cookiestr = getCookie("user");
 			var cookieid = cookiestr.split("#")[2];
 			var id = parseInt(cookieid);
 			var cookiename = cookiestr.split("#")[0];
+			cookiename=decodeURIComponent(cookiename)
 			var target="<%=path%>/index?userid="+id
+					
+			$.ajax({
+				url:"<%=path%>/center/getpic2?id="+id,
+				type:"GET",
+				success:function(data){	}
+			});
 
 			$.ajax({
 				type : "post",
@@ -260,11 +266,9 @@
 				dataType: 'html',
 				contentType : "application/json",
 				success : function (data) {
-				// data = jQuery.parseJSON(data);
-				//console.info(data);
-				$("#aaa").html(data);
+					$("#aaa").html(data);
 				}
-				    });
+			});
 
 		});
 	</script>

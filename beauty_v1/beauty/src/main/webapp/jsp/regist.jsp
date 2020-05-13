@@ -73,12 +73,7 @@
 						<div class="form-group mb-4">
 							<input type="text" name="introduction" placeholder="输入您的个人介绍" id="introduction" class="form-control border-0 shadow form-control-lg">
 						</div>
-						<div class="form-group mb-4">
-							<div class="custom-control custom-checkbox">
-								<input id="customCheck1" type="checkbox" checked class="custom-control-input"> <label for="customCheck1" class="custom-control-label">记住密码</label>
-							</div>
-						</div>
-						<div></div>
+
 
 						<h5 style="color: red">${errMsg}</h5>
 					</form>
@@ -103,79 +98,70 @@
 	<script src="../js/front.js"></script>
 
 	<script type="text/javascript">
-		$("#regbtn")
-				.click(
-						function() {
-							var username = $("#username").val();
-							var password = $("#password").val();
-							var password1 = $("#password1").val();
-
-							var roleid = $("#roleid").val();
-							var sex = $("#sex").val();
-							var birthday = $("#birthday").val().toString();
-							var school = $("#school").val();
-							var introduction = $("#introduction").val();
-							//判断username,password,roleid是否为空
-							if (username == "" || password == "" || roleid == "") {
-								alert("必填字段不能为空");
-								return false;
-							}
-							//判断两次密码是否一致
-							if (password != password1) {
-								alert("两次密码输入不一致");
-								return false;
-							}
-							//判断用户名长度应该在6-16位
-							if(username.length>16){
-								alert("用户名长度应少于16位");
-								return false;
-								
-							}
-							
-							//判断密码应该在6-16位
-							if(password.length<6||password.length>16){
-								alert("密码长度应该在6-16位");
-								return false;
-								
-							}
-
-							//将输入的性别转换为0和1，男为1，女为0
-							if (sex == "男")
-								sex = 1;
-							else
-								sex = 0;
-							//转换rolename,admin为1，user为2，uploader为3
-							if (roleid == "admin")
-								roleid = 1;
-							else if (roleid == "user")
-								roleid = 2;
-							else
-								roleid = 3;
-
-							var data1 = {
-								"username" : username,
-								"password" : password,
-								"roleid" : roleid,
-								"sex" : sex,
-								"birthday" : birthday,
-								"school" : school,
-								"introduction" : introduction
-							};
-							//测试传入的json字符串是否正确
-							//alert(JSON.stringify(data1));
-							//alert($("#RegisterForm").serialize());
-
-							$.ajax({
-										url : '<%=path%>/user/regist',
-										type : 'POST',
-										data : JSON.stringify(data1),
-										contentType : 'application/json',
-										success : function(result) {
-											alert("注册成功,自动转到登录页面");
-											window.location.href = "<%=path%>/user/tologin";
-										}
-									});
-						});
+		$("#regbtn").click(function() {
+			var username = $("#username").val();
+			var password = $("#password").val();
+			var password1 = $("#password1").val();
+	
+			var roleid = $("#roleid").val();
+			var sex = $("#sex").val();
+			var birthday = $("#birthday").val().toString();
+			var school = $("#school").val();
+			var introduction = $("#introduction").val();
+			//判断username,password,roleid是否为空
+			if (username == "" || password == "" || roleid == "") {
+				alert("必填字段不能为空");
+				return false;
+			}
+			//判断两次密码是否一致
+			if (password != password1) {
+				alert("两次密码输入不一致");
+				return false;
+			}
+			//判断用户名长度应该在6-16位
+			if(username.length>16){
+				alert("用户名长度应少于16位");
+				return false;
+			}
+			
+			//判断密码应该在6-16位
+			if(password.length<6||password.length>16){
+				alert("密码长度应该在6-16位");
+				return false;				
+			}
+	
+			//将输入的性别转换为0和1，男为1，女为0
+			if (sex == "男") sex = 1;
+			else sex = 0;
+			//转换rolename,admin为1，user为2，uploader为3
+			if (roleid == "admin") roleid = 1;
+			else if (roleid == "user") roleid = 2;
+			else roleid = 3;
+	
+			var data1 = {
+				"username" : username,
+				"password" : password,
+				"roleid" : roleid,
+				"sex" : sex,
+				"birthday" : birthday,
+				"school" : school,
+				"introduction" : introduction
+			};
+			//测试传入的json字符串是否正确
+			//alert(JSON.stringify(data1));
+			//alert($("#RegisterForm").serialize());
+	
+			$.ajax({
+				url : '<%=path%>/user/regist',
+				type : 'POST',
+				data : JSON.stringify(data1),
+				contentType : 'application/json',
+				success : function(result) {
+					alert("注册成功,自动转到登录页面");
+					window.location.href = "<%=path%>/user/tologin";
+				}
+			});
+		});
 	</script>
 
 

@@ -63,8 +63,8 @@
 										<div class="container-fluid replystyle">
 											<div class="row" >
 												<div class="col-md-2 text-center">
-													<img alt="" src="<%=path%>/images/avatar.png" width="100%" />
-													<span>${cmtermap[reply.userid] }</span>
+													<img alt="" src="<%=path%>/${cmtermap[reply.userid].profileimg }" width="100%" />
+													<span>${cmtermap[reply.userid].username }</span>
 												</div>
 												<div class="col-md-10">${reply.comment }</div>
 											</div>
@@ -89,8 +89,7 @@
 				</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary">确认</button>
-					</div>
+					</div> 
 				</div>
 				<!-- /.modal-content -->
 			</div>
@@ -177,7 +176,7 @@
 				<div class="col-sm-8">
 				<!-- blog start -->
 					<div class="single-metas fade-down text-left mt0 mb60 no-display animated fadeInDown">
-						<a href="<%=path%>/jsp/uploader.jsp?userid=${writer.id}" target="_blank"><h3>${writer.username }</h3></a>
+						<a href="<%=path%>/center/uploader?uploaderid=${writer.id}" target="_blank"><h3>${writer.username }</h3></a>
 						<span class="post-meta-link"><i class="el-icon-time-alt"></i> 发布于<fmt:formatDate value="${thisblog.createtime}" type="both"/></span>
 						<span class="post-meta-link" id="starnum"><i class="el-icon-heart"></i> <span class="counter" id="newstarnum">${starnum }</span></span>
 						<span id="addstar" class="post-meta-link" hidden="hidden">添加收藏</span>
@@ -202,11 +201,11 @@
 												
 												<footer class="comment-meta col-md-2 text-center">
 													<div class="comment-author vcard">
-														<img alt="" class="avatar" src="<%=path%>/images/avatar.png" width="100">
+														<img alt="" class="avatar" src="<%=path%>/${cmtermap[ncmt.userid].profileimg }" width="100">
 													</div>
 													<div class="comment-metadata">
 														<cite class="fn">
-															<a class="url" href="#" rel="external nofollow">${cmtermap[ncmt.userid] }</a>
+															<a class="url" href="#" rel="external nofollow">${cmtermap[ncmt.userid].username }</a>
 														</cite> 
 													</div>
 													<!-- .comment-metadata -->
@@ -291,9 +290,20 @@
 	<!-- //copyright  bottom-->	
 
 	<!-- JavaScript files-->
+	<script src="<%=path%>/js/ups/bootstrap.js"></script>
+	<script src="<%=path%>/js/ups/plugins.js"></script>
+	<script src="<%=path%>/js/init.js"></script>
+	<script src="<%=path%>/js/custom/getcookie.js"></script>
+	
 	<script type="text/javascript">
+		var cookiestr = getCookie("user");
+		var cookieid = cookiestr.split("#")[2];
+		var id = parseInt(cookieid);
+		var cookiename = cookiestr.split("#")[0];
+		cookiename=decodeURIComponent(cookiename)
+	
 		$("#starnum").hover(function(){
-			var userid=6
+			var userid=id
 			var blogid=${thisblog.id}
 
 			$.ajax({
@@ -317,7 +327,7 @@
 		});
 		$("#addstar").click(function(){
 			
-			var userid=6
+			var userid=id
 			var blogid=${thisblog.id}
 
 			var text=$("#addstar").text()
@@ -359,27 +369,8 @@
 		});
 
 	</script>
-	<script src="<%=path%>/js/ups/bootstrap.js"></script>
-	<script src="<%=path%>/js/ups/plugins.js"></script>
-	<script src="<%=path%>/js/init.js"></script>
-	<script src="<%=path%>/js/custom/getcookie.js"></script>
 	
 	<script type="text/javascript">
-	function testsubmit(obj) {
-		/* console.info($('#commentform').serialize())
-		console.info(JSON.stringify($('#commentform').serialize()))
-		alert(JSON.stringify($('#commentform').serialize())) */
-		var div=($(obj).parent())
-		console.info($(div).children())
-		var userid = $(div).find("input[name='userid']").val()
-		var blogid = $(div).find("input[name='blogid']").val()
-		var cmtid = $(div).find("input[name='cmtid']").val()
-		var comment = $(div).find("textarea").val()
-		console.info("userid: "+userid+"; blogid: "+blogid+"; cmtid: "+cmtid+"; comment: "+comment)
-		alert("end")
-/* 		var userid=$(div).attr()
-		$("input[name='keleyicom']") */
-	}
 	
 	function ajaxsubmit(obj) {
 		var div = $(obj).parent()

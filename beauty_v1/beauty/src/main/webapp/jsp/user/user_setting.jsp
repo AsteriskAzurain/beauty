@@ -105,6 +105,17 @@
 	<script src="<%=path%>/js/custom/getcookie.js"></script>
 	
 	<script type="text/javascript">
+	
+	$(document).ready(function(){
+		  $("#inputGroupFile01").change(function(){
+			  var text=$("#inputGroupFile01").val();
+			  console.info(text);
+			  var i=text.lastIndexOf("\\");
+			  text=text.substring(i+1);
+			  $(".custom-file-label").text(text);
+		  });
+		});
+	
 		$(function() {
 			var cookiestr = getCookie("user");
 			if (cookiestr != "") {
@@ -127,69 +138,90 @@
 			
 		});
 
-		$("#update_btn")
-				.click(
-						function() {
-							//旧密码传到后端进行比较
-							var password1 = $("#password1").val();
-							var password = $("#password").val();
-							var oldpassword = $("#oldpassword").val();
-							//获取cookie中的id值
-							/* 	
-							 alert("id为："+getCookie("user").split("#")[2]);
-							 alert("password为："+getCookie("user").split("#")[1]);
-							 */
-							var cookieid = getCookie("user").split("#")[2];
-							//从cookie中获取的pwd就是登录密码，与旧密码比较
-							var cookiepwd = getCookie("user").split("#")[1];
-							if (cookiepwd != oldpassword) {
-								alert("旧密码不正确，无法进行修改操作");
-								return false;
-							}
-							if (password1 != password) {
-								alert("两次输入的密码不一致,请重新输入");
-								return false;
-							}
-							if (oldpassword == password || oldpassword == password1) {
-								alert("新旧密码不能相同!");
-								return false;
-							}
-							if (password.length<6||password.length>16) {
-								alert("新密码长度应该在6-16位");
-								return false;
-
-							}
-							var id = parseInt(cookieid);
-							//id获取时是string型，这里转为int型
-							//alert("id类型为"+typeof(parseInt(id)));
-							//定义传到后端的数据
-							var data1 = {
-								"password" : password,
-								"id" : id
-							};
-							$.ajax({
-									url : '${pageContext.request.contextPath}/center/modifypwd',
-									type : 'POST',
-									data : JSON.stringify(data1),
-									contentType : 'application/json',
-									success : function(result) {
-										alert("密码修改成功，即将返回个人中心");
-										window.location.href = "${pageContext.request.contextPath}/center/tocenter";
-									}
-									});
-
-							alert("密码修改成功");
-						});
+		$("#update_btn").click(function() {
+			//旧密码传到后端进行比较
+			var password1 = $("#password1").val();
+			var password = $("#password").val();
+			var oldpassword = $("#oldpassword").val();
+			//获取cookie中的id值
+			var cookiestr = getCookie("user");
+			var cookieid = cookiestr.split("#")[2];
+			var id = parseInt(cookieid);
+			var url="<%=path%>/center/findpwd?id="+ id
+			var old=true
+			$.ajax({
+				url : url,
+				type : 'GET',
+				success : function(data) {	
+					console.info(data)
+					old=aftergetpswd(data.pwd,oldpassword)
+				}
+			});
+			
+			console.info(old)
+			if(!old) return old
+			
+			if (password1 != password) {
+				alert("两次输入的密码不一致,请重新输入");
+				return false;
+			}
+			if (oldpassword == password || oldpassword == password1) {
+				alert("新旧密码不能相同!");
+				return false;
+			}
+			if (password.length<6||password.length>16) {
+				alert("新密码长度应该在6-16位");
+				return false;
+			}
+			
+			var id = parseInt(cookieid);
+			//id获取时是string型，这里转为int型
+			//alert("id类型为"+typeof(parseInt(id)));
+			//定义传到后端的数据
+			var data1 = {
+				"password" : password,
+				"id" : id
+			};
+			url="<%=path%>/center/modifypwd"
+			
+			$.ajax({
+				url : url,
+				type : 'POST',
+				data : JSON.stringify(data1),
+				contentType : 'application/json',
+				success : function(result) {
+					alert("密码修改成功，即将返回个人中心");
+					window.location.href = "${pageContext.request.contextPath}/center/tocenter";
+					}
+				});
+			alert("密码修改成功");
+			//结束
+		});
+		
 		$("#upimg_btn").click(function() {
 			var upfile = $("#file").val();
 			if (upfile == null || upfile == "") {
 				alert("您尚未选择导入的头像");
 				return false;
-
-			} 
+			}
 			alert("头像修改成功");
-			
 		});
+		
+		function aftergetpswd(sqlpwd, oldpassword ) {
+			//数据库Password,String型
+			console.info(sqlpwd)
+			
+			//修改了user_setting对旧密码的判断，考虑到没记住密码的情况
+			if (sqlpwd != oldpassword) {
+				alert("旧密码不正确，无法进行修改操作");
+				return false;
+			}
+			//由于get到了数据库的密码，我们再得寸进尺亿点点
+			if (sqlpwd == password) {
+				alert("新输入的密码不能与旧密码一致");
+				return false;
+			}
+		}
 	</script>
 	
 	
