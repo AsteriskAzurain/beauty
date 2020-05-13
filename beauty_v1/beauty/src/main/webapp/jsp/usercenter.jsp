@@ -125,8 +125,8 @@
 			$("#headpic").attr('src', concatpic);
 
 			var cookiestr = getCookie("user");
-			if (cookiestr != "")
-				var cookiename = cookiestr.split("#")[0];
+			var cookiename = cookiestr.split("#")[0];
+			cookiename=decodeURIComponent(cookiename)
 			var cookieid = cookiestr.split("#")[2];
 			$("#centername").text(cookiename + "的个人空间");
 			var url = "<%=path%>/center/user_follow?followerid="	+ cookieid;

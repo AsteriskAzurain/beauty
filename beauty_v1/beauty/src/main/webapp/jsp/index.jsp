@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 	
+<jsp:directive.page import="java.net.URLDecoder"/>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,23 +104,23 @@
 				<div class="carousel-item active">
 					<img src="https://static.runoob.com/images/mix/img_fjords_wide.jpg">
 					<div class="carousel-caption">
-						<h3>首页轮播图第一张图片</h3>
-						<p>描述文字</p>
+						<h3>${reclist[0].title }</h3>
+						<p>${ fn:substring(reclist[0].content, 0, 20) } ...</p>
 					</div>
 				</div>
 				<div class="carousel-item">
 					<img src="https://static.runoob.com/images/mix/img_nature_wide.jpg">
 					<div class="carousel-caption">
-						<h3>首页轮播图第二张图片</h3>
-						<p>描述文字</p>
+						<h3>${reclist[1].title }</h3>
+						<p>${ fn:substring(reclist[1].content, 0, 20) } ...</p>
 					</div>
 				</div>
 				<div class="carousel-item">
 					<img
 						src="https://static.runoob.com/images/mix/img_mountains_wide.jpg">
 					<div class="carousel-caption">
-						<h3>首页轮播图第三张图片</h3>
-						<p>欢迎你</p>
+						<h3>${reclist[2].title }</h3>
+						<p>${ fn:substring(reclist[2].content, 0, 20) } ...</p>
 					</div>
 				</div>
 			</div>
@@ -230,7 +232,7 @@
 	<!-- //copyright bottom -->
 
 	<script src="<%=path%>/js/custom/getcookie.js"></script>
-	
+
 	<script type="text/javascript">
 		$(function(){
 			var cookiestr = getCookie("user");
@@ -249,12 +251,13 @@
 			var cookieid = cookiestr.split("#")[2];
 			var id = parseInt(cookieid);
 			var cookiename = cookiestr.split("#")[0];
+			cookiename=decodeURIComponent(cookiename)
 			var target="<%=path%>/index?userid="+id
 					
 			$.ajax({
 				url:"<%=path%>/center/getpic2?id="+id,
 				type:"GET",
-				success:function(){}
+				success:function(data){	}
 			});
 
 			$.ajax({
@@ -263,9 +266,7 @@
 				dataType: 'html',
 				contentType : "application/json",
 				success : function (data) {
-				// data = jQuery.parseJSON(data);
-				//console.info(data);
-				$("#aaa").html(data);
+					$("#aaa").html(data);
 				}
 			});
 

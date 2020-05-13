@@ -73,24 +73,21 @@ public class UserController {
 			session.setAttribute("SESSION_PassWord", result.get(0).getPassword());
 			// 由于CookieVersion 0不支持逗号，因此换成#号
 			// fbw: username涉及到特殊字符 如空格 对string编码 使用时需要解码
-			StringBuffer logininfo = new StringBuffer();
-			logininfo.append(URLEncoder.encode(result.get(0).getUsername(), String.valueOf(Charsets.UTF_8)));	
-			System.out.println(logininfo);
-//			String loginInfo = result.get(0).getUsername() + "#" + result.get(0).getPassword() + "#" + result.get(0).getId();
-//			String loginInfo2 = result.get(0).getUsername() + "#" +'1'+ "#" + result.get(0).getId();
+			//Js对空格的编码后得到的是"%20"; Java对空格的编码后得到的是"+"；
+			String loginname = URLEncoder.encode(result.get(0).getUsername(), String.valueOf(Charsets.UTF_8));
+			loginname=loginname.replaceAll("\\+", "%20");
+			System.out.println(loginname);
+			String loginInfo = loginname + "#" + result.get(0).getPassword() + "#" + result.get(0).getId();
+			String loginInfo2 = loginname + "#" +'1'+ "#" + result.get(0).getId();
 			// 如果记住密码设置cookie
 			if (re) {
-				logininfo.append("#").append(result.get(0).getPassword());
-				logininfo.append("#").append(result.get(0).getId().toString());
-				Cookie userCookie = new Cookie("user", logininfo.toString());
+				Cookie userCookie = new Cookie("user", loginInfo.toString());
 				// 设置保存7天cookie
 				userCookie.setMaxAge(7 * 24 * 60 * 60);
 				userCookie.setPath("/");
 				response.addCookie(userCookie);
 			} else {// 没有选中记住密码，删除cookie
-				logininfo.append("#").append("1");
-				logininfo.append("#").append(result.get(0).getId().toString());
-				Cookie newCookie = new Cookie("user", logininfo.toString());
+				Cookie newCookie = new Cookie("user", loginInfo2.toString());
 				newCookie.setMaxAge(7 * 24 * 60 * 60);
 				newCookie.setPath("/");
 				// 覆盖之前的userCookie

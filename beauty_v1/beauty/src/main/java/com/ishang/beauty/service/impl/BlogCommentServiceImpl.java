@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ishang.beauty.dao.BlogCommentMapper;
 import com.ishang.beauty.dao.UserMapper;
 import com.ishang.beauty.entity.BlogComment;
+import com.ishang.beauty.entity.User;
 import com.ishang.beauty.entity.WholeComment;
 import com.ishang.beauty.service.BlogCommentService;
 
@@ -115,15 +116,10 @@ public class BlogCommentServiceImpl implements BlogCommentService {
 		
 		// get reply map
 		Map<Integer, List<BlogComment>> replymap= new HashMap<Integer, List<BlogComment>>();
-		Map<Integer,String> cmtermap=new HashMap<Integer, String>();
+		Map<Integer,User> cmtermap=new HashMap<Integer, User>();
 		for(BlogComment ncmt: wholecmt.getNormalcmt()) {
-			cmtermap.put(ncmt.getUserid(), userdao.selectByPrimaryKey(ncmt.getUserid()).get(0).getUsername());
-			
-			//reply map
-//			List<BlogComment> allreply=cmtservice.findallreply(blogid);
-//			model.addAttribute("allreply", allreply);
-//			List<BlogComment> replylist = cmtservice.findreply(blogid, ncmt.getId());
-//			 if(replylist.size()>0)  replymap.put(ncmt.getId(), replylist);
+//			cmtermap.put(ncmt.getUserid(), userdao.selectByPrimaryKey(ncmt.getUserid()).get(0).getUsername());
+			cmtermap.put(ncmt.getUserid(), userdao.selectByPrimaryKey(ncmt.getUserid()).get(0));
 			replymap.put(ncmt.getId(),  getonecmtreply(ncmt.getId()));
 		}	
 		
@@ -131,7 +127,8 @@ public class BlogCommentServiceImpl implements BlogCommentService {
 		// get cmter
 		for(List<BlogComment> collection:replymap.values()) {
 			for(BlogComment rcmt:collection) {
-				cmtermap.put(rcmt.getUserid(), userdao.selectByPrimaryKey(rcmt.getUserid()).get(0).getUsername());			
+//				cmtermap.put(rcmt.getUserid(), userdao.selectByPrimaryKey(rcmt.getUserid()).get(0).getUsername());
+				cmtermap.put(rcmt.getUserid(), userdao.selectByPrimaryKey(rcmt.getUserid()).get(0));
 			}
 		}
 		wholecmt.setCmtermap(cmtermap);

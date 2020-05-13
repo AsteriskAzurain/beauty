@@ -73,6 +73,7 @@
 			$("#checkboxNum").prop("checked",true);
 			cookiestr=cookiestr.substring(0,cookiestr.length-1);
 			var username=cookiestr.split("#")[0];
+			username=decodeURIComponent(username)
 			var password=cookiestr.split("#")[1];
 			$("#username").val(username);
 			$("#password").val(password);

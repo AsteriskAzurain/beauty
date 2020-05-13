@@ -63,8 +63,8 @@
 										<div class="container-fluid replystyle">
 											<div class="row" >
 												<div class="col-md-2 text-center">
-													<img alt="" src="<%=path%>/images/avatar.png" width="100%" />
-													<span>${cmtermap[reply.userid] }</span>
+													<img alt="" src="<%=path%>/${cmtermap[reply.userid].profileimg }" width="100%" />
+													<span>${cmtermap[reply.userid].username }</span>
 												</div>
 												<div class="col-md-10">${reply.comment }</div>
 											</div>
@@ -89,8 +89,7 @@
 				</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary">确认</button>
-					</div>
+					</div> 
 				</div>
 				<!-- /.modal-content -->
 			</div>
@@ -202,11 +201,11 @@
 												
 												<footer class="comment-meta col-md-2 text-center">
 													<div class="comment-author vcard">
-														<img alt="" class="avatar" src="<%=path%>/images/avatar.png" width="100">
+														<img alt="" class="avatar" src="<%=path%>/${cmtermap[ncmt.userid].profileimg }" width="100">
 													</div>
 													<div class="comment-metadata">
 														<cite class="fn">
-															<a class="url" href="#" rel="external nofollow">${cmtermap[ncmt.userid] }</a>
+															<a class="url" href="#" rel="external nofollow">${cmtermap[ncmt.userid].username }</a>
 														</cite> 
 													</div>
 													<!-- .comment-metadata -->
@@ -301,6 +300,7 @@
 		var cookieid = cookiestr.split("#")[2];
 		var id = parseInt(cookieid);
 		var cookiename = cookiestr.split("#")[0];
+		cookiename=decodeURIComponent(cookiename)
 	
 		$("#starnum").hover(function(){
 			var userid=id

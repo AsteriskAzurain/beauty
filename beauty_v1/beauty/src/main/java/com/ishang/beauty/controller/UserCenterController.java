@@ -188,13 +188,20 @@ public class UserCenterController {
 	}
 	
 	//通过用户id查询password，用于修改密码(user_setting)
+	@ResponseBody
 	@RequestMapping("/findpwd")
-	public String findpwd(@RequestParam Integer id,HttpSession session) {
+	public Map<String, Object> findpwd(@RequestParam Integer id,HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		List<User> list=service.findbyid(id);
 		String pwd=list.get(0).getPassword();
-		session.setAttribute("pwd", pwd);
-		return "user/user_setting.jsp";
+		map.put("pwd", pwd);
+		return map;
 	}
+	/*   ljt
+	 * public String findpwd(@RequestParam Integer id,HttpSession session) {
+	 * List<User> list=service.findbyid(id); String pwd=list.get(0).getPassword();
+	 * session.setAttribute("pwd", pwd); return "user/user_setting.jsp"; }
+	 */
 	
 	//将结果放到uploaderFanList中
 	@RequestMapping("/upfanlist")

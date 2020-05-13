@@ -87,7 +87,7 @@
 				<c:forEach items="${uplist}" var="ulist" begin="0" end="0">
 					<div class="col-lg-12 mt-5 row">
 						<div class="col-lg-2">
-							<img alt="" src="<%=path%>/<c:out value="${ulist.profileimg}" />" style="max-width: 100px;">
+							<img alt="${ulist.username}" class="img-thumbnail"  src="<%=path%>/<c:out value="${ulist.profileimg}" />" style="max-width: 100px;">
 						</div>
 						<div class="col-lg-8  ">
 							<h2 class="mb-4">
@@ -302,6 +302,20 @@
 							var content =  response.rstlist[i].content.substring(0,100)
 							var picurl = response.rstlist[i].picUrl1
 							picurl = "<%=path%>/images/portfolio/folio-2.jpeg";
+							var createtime=response.rstlist[i].createtime
+							
+							var cdate=new Date()
+							if(createtime!=null){
+								bdate=new Date(parseInt(createtime));
+							}
+							var year = cdate.getFullYear();
+							var month = cdate.getMonth()+1;
+							var day = cdate.getDate();
+							var hours = date.getHours();
+					        var minu = date.getMinutes();
+							month = month < 10 ? "0"+month:month;
+							day = day < 10 ? "0"+day:day;
+							var datestr =year+'-'+mon+'-'+day+' '+hours+':'+minu;
 							
 							var ns = response.stararr[i]
 							var nc = response.cmtarr[i]
@@ -318,6 +332,7 @@
 									+ '<h4>' + title + '</h4>'
 									+ '</div>'
 									+ '<p>' + content + '</p>'
+									+ '<h6>2020-05-08 08:00</h6>'
 									+ '</div> </div> </div> '	)
 						}
 						myhtml += ' </div>'

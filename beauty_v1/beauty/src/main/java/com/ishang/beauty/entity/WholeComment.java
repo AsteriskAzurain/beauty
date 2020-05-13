@@ -11,7 +11,7 @@ public class WholeComment {
 	
 	Map<Integer, List<BlogComment>> replymap;
 	
-	Map<Integer,String> cmtermap;
+	Map<Integer,User> cmtermap;
 
 	public int getCmtnum() {
 		return cmtnum;
@@ -37,12 +37,11 @@ public class WholeComment {
 		this.replymap = replymap;
 	}
 
-	public Map<Integer, String> getCmtermap() {
+	public Map<Integer, User> getCmtermap() {
 		return cmtermap;
 	}
 
-	public void setCmtermap(Map<Integer, String> cmtermap) {
+	public void setCmtermap(Map<Integer, User> cmtermap) {
 		this.cmtermap = cmtermap;
 	}
-	
 }

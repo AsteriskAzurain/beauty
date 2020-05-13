@@ -762,4 +762,8 @@
     -ms-transition: 0.5s all;
 }
 
+.upblog-word h6{
+	float: right;
+	margin-top: 10px;
+}
 

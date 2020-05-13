@@ -9,8 +9,7 @@
 <title>后台管理中心</title>
 <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
+<%String path=request.getContextPath(); %>
 </head>
 <body>
 <!-- --------------------------------------------------delete模态框------------------------------------------------------------------- -->
@@ -378,6 +377,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+	<script src="<%=path%>/js/custom/getcookie.js"></script>
 
 	<script type="text/javascript">
 	$(function(){
@@ -392,11 +392,11 @@
 		var nexnum='${pageInfo.pageNum+1}';
 		var pn='${pageInfo.pages}';
 		var getname=$("#search_username").val();
-		var indexpn="${pageContext.request.contextPath}/user/selectLike?username="+getname+"&pn=1";
-		var prepn="${pageContext.request.contextPath}/user/selectLike?username="+getname+"&pn="+prenum;
-		var nextpn="${pageContext.request.contextPath}/user/selectLike?username="+getname+"&pn="+nexnum;
-		var navpn="${pageContext.request.contextPath}/user/selectLike?username="+getname+"&pn="+navpage;
-		var endpn="${pageContext.request.contextPath}/user/selectLike?username="+getname+"&pn="+pn;
+		var indexpn="<%=path%>/user/selectLike?username="+getname+"&pn=1";
+		var prepn="<%=path%>/user/selectLike?username="+getname+"&pn="+prenum;
+		var nextpn="<%=path%>/user/selectLike?username="+getname+"&pn="+nexnum;
+		var navpn="<%=path%>/user/selectLike?username="+getname+"&pn="+navpage;
+		var endpn="<%=path%>/user/selectLike?username="+getname+"&pn="+pn;
 		
 		console.log("indexpn:"+indexpn);
 		console.log("prepn:"+prepn);
@@ -410,25 +410,6 @@
 		$("#endpage").attr("href",endpn);	
 		
 	});
-	
-	function getCookie(cookiename){
-		var name=cookiename+"=";
-		var str=document.cookie.split(';');
-		var le=str.length;
-		
-		for (var i = 0; i < str.length; i++) {
-				var ind = str[i];
-				while (ind.charAt(0) == ' ')
-					ind = ind.substring(1);
-
-				var saf = ind.length;
-				if (ind.indexOf(name) != -1)
-					return ind.substring(name.length, ind.length);
-
-			}
-			return "";
-
-		};
 
 		$("#saveUser_btn").click(function() {
 			//alert($("#saveModal form").serialize());
@@ -485,7 +466,7 @@
 			}
 
 			$.ajax({
-				url : "${pageContext.request.contextPath}/user/saveUser",
+				url : "<%=path%>/user/saveUser",
 				type : "POST",
 				data : JSON.stringify(data1),
 				contentType : 'application/json',
@@ -589,7 +570,7 @@
 			}
 
 			$.ajax({
-				url : "${pageContext.request.contextPath}/user/updateUser",
+				url : "<%=path%>/user/updateUser",
 				type : 'POST',
 				data : JSON.stringify(data),
 				contentType : 'application/json',
@@ -618,45 +599,36 @@
 			s
 
 			$.ajax({
-				url : "${pageContext.request.contextPath}/user/deleteUser",
+				url : "<%=path%>/user/deleteUser",
 				type : 'POST',
 				data : JSON.stringify(data),
 				contentType : 'application/json',
 				success : function() {
 					alert("数据成功删除");
 					$("#deleteModal").modal('hide');
-
 				}
 
 			});
 
 		});
 
-		$("#search_btn")
-				.click(
-						function() {
-							var username = $("#search_username").val();
-							var data1 = {
-								"username" : username
-
-							};
-							alert(JSON.stringify(data1));
-
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/user/selectLike?username="
-												+ username,
-										type : "POST",
-										data : JSON.stringify(data1),
-										contentType : 'application/json',
-										success : function() {
-											alert("success");
-
-										}
-
-									});
-
-						})
+			$("#search_btn").click(function() {
+				var username = $("#search_username").val();
+				var data1 = {
+					"username" : username
+				};
+				alert(JSON.stringify(data1));
+			
+				$.ajax({
+					url : "<%=path%>/user/selectLike?username=" + username,
+					type : "POST",
+					data : JSON.stringify(data1),
+					contentType : 'application/json',
+					success : function() {
+						alert("success");
+					}
+				});
+			})
 	</script>
 
 </body>
