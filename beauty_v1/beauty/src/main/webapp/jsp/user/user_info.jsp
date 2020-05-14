@@ -232,7 +232,7 @@
 				"school" : school,
 				
 			};
-			alert("postdata:" +JSON.stringify(postdata));
+			
 
 			$.ajax({
 				url : "${pageContext.request.contextPath}/center/updateInfo",

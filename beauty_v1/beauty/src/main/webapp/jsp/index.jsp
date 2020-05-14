@@ -60,7 +60,7 @@
 					<!-- //logo -->
 					<div class="d-flex mt-lg-1 mt-sm-2 mt-3 justify-content-center">
 					<!-- 头像 -->
-					<img src="<%=path%>/${getpic}" class="headpic">
+					<img src="#" id="headpic" class="headpic">
 					<label id="welcomemsg" class="welcomemsg" style="color:#705ecf"></label>
 					
 						<!-- search -->
@@ -291,7 +291,10 @@
 	
 <script type="text/javascript">
 $(function(){
-	
+	var getpic2="${getpic2}";
+	//alert(getpic);
+	var concatpic='/beauty/'+getpic2;
+	$("#headpic").attr('src',concatpic);
 	var cookiestr = getCookie("user");
 	if(cookiestr!="")
 		var cookiename=cookiestr.split("#")[0];

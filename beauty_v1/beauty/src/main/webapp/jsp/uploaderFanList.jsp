@@ -124,9 +124,9 @@
 						</div>
 						<div class="col-lg-2 mt-4"
 							style="height: 40px; text-align: center;">
-							<a href="#" class="btn button-style">关注 Follow</a>
+							<!-- <a href="#" class="btn button-style">关注 Follow</a> -->
 							<div class="mt-3">
-								<a href="#">粉丝数：${fan}</a>
+								<h3><a href="#">粉丝数：${fan}</a></h3>
 							</div>
 						</div>
 					</div>
@@ -172,20 +172,20 @@
 								<c:out value="${list.introduction}" />
 							</p>
 							<div class="fans-action">
-								<div class="be-dropdown fans-action-btn fans-action-follow"
-									id="div${aa.index}">
 								
-									<span class="fans-action-text" id="subscribe${aa.index}" onclick="subins()">未关注</span>
+								
+
+									<button type="button" class="btn btn-default" name="subscribe" id="subscribe${list.id}" value="${list.id}">${arr2[aa.index]}</button>
 										
-										<!--
-										<span class="fans-action-text" id="subscribenot${aa.index}" style="display:none">已关注</span>
-										-->
+								
 									<form id="hhhh">
-										<input type="hidden" id="hide${aa.index}" value="${list.id}">
+										<input type="hidden" name="hide" id="hide${aa.index}" value="${list.id}">
+										<input type="hidden" name="message" id="message" value="${info}">
+										<input type="hidden" name="text1" id="text1" value="${list1[0]}">
 									</form>
 
 
-								</div>
+								
 							</div>
 						</div></li>
 				</c:forEach>
@@ -226,9 +226,6 @@
 	<script src="<%=path%>/js/ups/init.js"></script>
 
 	<script type="text/javascript">
-		//followerid要读取粉丝列表中的粉丝id，这里在foreach循环体里新增了一个form,再新建input，
-		//设置value='${listid}'type：hidden
-
 		$(function() {
 			var getpic="${getpic}";
 			//alert(getpic);
@@ -236,13 +233,7 @@
 			$("#headpic").attr('src',concatpic);
 			
 			var cookiestr = getCookie("user");
-			if (cookiestr != "")
-				var cookiename = cookiestr.split("#")[0];
 			var cookieid = cookiestr.split("#")[2];
-			$("#centername").text(cookiename + "的个人空间");
-			var url = "${pageContext.request.contextPath}/center/user_follow?followerid="
-					+ cookieid;
-			$("#userframe").attr("src", url);
 
 			var id=parseInt(cookieid);
 			$.ajax({
@@ -253,63 +244,72 @@
 			console.log('${fan}');
 			console.log('${fanlist}');
 			console.log('${uplist}');
-			console.log("text1="+'${text1}');
-			console.log("sub=" + '${sub}');
-			//console.log(parseInt('${fanlist[1].id}'));
-			//console.log(Number(${fanlist[0].id}));
-			//console.log('${fanlist[0].id}')
+			console.log("text1="+'${list1}');
 		
 			
 			
 			var str = getCookie("user");
-			var followerid = str.split("#")[2];
+			var followerid = parseInt(str.split("#")[2]);
 			var fanlist='${fanlist}';
 			var count='${fan}';
 			var uploaderid=parseInt($("#hide").val());
-			var i=0;
-			check(i);
+				var arr=[];
+				//alert('${fanlist[0].id}');
+				
+			$('[name=hide]').each(function(i){
+				
+				arr.push(parseInt($("#hide"+i.toString()).val()));
+				
+				
+			});
+			//[object Array]: [52, 42, 41, 40, 39, 32, 35, 43]
+			console.log(arr);
+			var data={
+					"arr":arr,
+					"followerid":followerid	
+			}
+			$
+			.ajax({
+				url : "${pageContext.request.contextPath}/center/subscribelist",
+				type : "POST",
+				data:   data,
+				traditional:true,
+				success : function(data) {
+					
+				}
+				
+			});
+				
+				
+				
 			
 		});
-		function check(i){
 			
 			
-			var str = getCookie("user");
-			var followerid = str.split("#")[2];
-			var fanlist='${fanlist}';
-			var count='${fan}';
-			var a=i.toString();
-			
-			if(i>=count)return;
-			
-			
-				var uploaderid=parseInt($("#hide"+i).val());
-				//alert("id="+uploaderid);
-				$
+				//------ajax--------
+				/* $
 				.ajax({
-					url : "${pageContext.request.contextPath}/center/subscribelist?uploaderid="
-							+ uploaderid + "&followerid=" + followerid,
-					type : "GET",
+					url : "${pageContext.request.contextPath}/center/subscribelist
+					type : "POST",
 					success : function() {
-						//取得全是未关注
-						console.log('<%=session.getAttribute("text1") %>');
-						
+						//递归的话每一次发送请求
 						if('${text1}'=='已关注'){
-							$('#subscribe'+a).html("sdfasfsd已关注");
+
+							$("#subscribe"+uploaderid.toString()).text("已关注");
 						}
 						else{
-							
-							$('#subscribe'+a).html("十分士大夫未关注");
-		
+							//$("fandiv").children("ul").find("li").eq(a).children("div").children("div").children("div").children("span").html("sdfasfsd已关注");
+							$("#subscribe"+uploaderid.toString()).text("未关注");
 						}
 						
 						i=i+1;
 						check(i);
 					}
 					
-				});  
-				
+				});   */
+				//---------ajax>>>end----------		
 		
-			}
+ 
 		function getCookie(cookiename) {
 
 			var name = cookiename + "=";
@@ -329,105 +329,60 @@
 
 		};
 		//未关注->关注,followerid取当前行用户的id
-		function subins(){
-			//var id = $("#content").children("div").children("div").children("form").children("input").eq(0).val();
-			var id=$("#hhhh").children("input").eq(0).val();
-			//总是取得同一个id
-			var uploaderid=parseInt(id);
-			console.log(typeof(parseInt(id)));
+		$('[name=subscribe]').click(function(){
+			var uploaderid=$(this).val();
+			
 			//alert(uploaderid);
 			var str = getCookie("user");
 			var followerid = str.split("#")[2];
-		};
-	//followerid
-
-	//再插入信息
-/* 	
-	$
-			.ajax({
-				url : "${pageContext.request.contextPath}/center/subinsert1?uploaderid="
-						+ uploaderid
-						+ "&followerid="
-						+ followerid,
-				type : "GET",
-				success : function() {
-					alert("${success}");
-					//alert("请手动刷新页面以保证粉丝数正常显示");
-					//$("#subscribe").text("已关注");
-					window.location.reload();
-				}
+			if($(this).text()=='未关注'){
+			
+			
+			$.ajax({
+				url:"${pageContext.request.contextPath}/center/subinsert1?uploaderid="
+					+ uploaderid + "&followerid=" + followerid,
+				type:"POST",
+				success:function(){
+					//var aaa=$(this).parent().children("form").children("input").eq(1).val();
+					//alert(aaa);
+					alert("成功添加关注");
+					
+						$("#subscribe"+uploaderid.toString()).text("已关注");
+					}				
+					
+				
+				
+				
 			});
- */
+			}
+			//先进行插入，能插入的都插完就只剩取消关注到了
+			else{
+				var uploaderid=$(this).val();
+			
+			//alert(uploaderid);
+			var str = getCookie("user");
+			var followerid = str.split("#")[2];
+				$.ajax({
+					url:"${pageContext.request.contextPath}/center/subdelete1?uploaderid="
+						+ uploaderid + "&followerid=" + followerid,
+					type:"POST",
+					success:function(){
+						alert("成功取消关注");
+						$("#subscribe"+uploaderid.toString()).text("未关注");
+						
+						
+					}
+					
+					
+				});
+			}
+			
+			
+			
+		});
+
 
 		
-		
-
-		/* $("#subscribe")
-				.click(
-						function() {
-
-							var uploaderid = $(this).parent().children("form")
-									.children("input").eq(0).val();
-							var str = getCookie("user");
-							var followerid = str.split("#")[2];
-
-							//followerid
-
-							//再插入信息
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/center/subinsert1?uploaderid="
-												+ uploaderid
-												+ "&followerid="
-												+ followerid,
-										type : "GET",
-										success : function() {
-											alert("关注成功");
-											//alert("请手动刷新页面以保证粉丝数正常显示");
-											//$("#subscribe").text("已关注");
-											window.location.reload();
-										}
-									});
-
-						}); */
-		/* 
-		$("#subscribe1")
-				.click(
-						function() {
-							//返回的select列表
-							//后端返回关注/没关注的字符串
-
-							var uploaderid = $(this).parent().children("form")
-									.children("input").eq(0).val();
-							alert("subscribe1的btn:id:" + uploaderid);
-
-							var str = getCookie("user");
-
-							//followerid
-							//从后端获取判断信息
-							var followerid = str.split("#")[2];
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/center/subdelete1?uploaderid="
-												+ uploaderid
-												+ "&followerid="
-												+ followerid,
-										type : "GET",
-										success : function() {
-											alert("取消关注成功");
-											alert("请手动刷新页面以保证粉丝数正常显示");
-											$("#subscribe").text("未关注");
-											window.location.reload();
-										}
-									});
-
-						});
-		
-		 */
-		 
-		 
-		 
-		 
 	</script>
 
 

@@ -71,18 +71,20 @@
 			<c:forEach items="${flist}" var="list" varStatus="index" begin="4" step="1">
 				<li class="list-item row">
 					<a href="${pageContext.request.contextPath}/center/uploader?uploaderid=<c:out value="${list.id}"/>"  target="_blank" class="cover"> 
-						<img src="<%=path%>/<c:out value="${list.profileimg}" />" alt="星s巨寒">
+						<img src="<%=path%>/<c:out value="${list.profileimg}" />" alt="">
 					</a>
 					<div class="content">
-						<a href="https://space.bilibili.com/12065306/" target="_blank"
+						<a href="" target="_blank"
 							class="title"> <span><c:out value="${list.username}" /></span>
 						</a>
 						<p title="<c:out value="${list.introduction}" />"
 							class="desc"><c:out value="${list.introduction}" /></p>
 						<div class="fans-action">
-							<div class="be-dropdown fans-action-btn fans-action-follow">
-								<span class="fans-action-text">已关注</span>
-							</div>
+							<button type="button" class="btn btn-default" name="sub_btn" id="sub_btn${list.id}" value="${list.id}">已关注</button>
+							
+							<!-- <div class="be-dropdown fans-action-btn fans-action-follow">
+								<button type="button" class="btn btn-default btn-lg">已关注</button>
+							</div> -->
 						</div>
 					</div></li>
 		</c:forEach>
@@ -126,11 +128,7 @@ $.ajax({
 	
 	
 });
-	
-	
-	
-	
-	
+
 });
 function getCookie(cookiename) {
 	var name = cookiename + "=";
@@ -149,6 +147,50 @@ function getCookie(cookiename) {
 	return "";
 
 };
+//取消关注功能
+$('[name=sub_btn]').click(function(){
+	var str=getCookie("user");
+	var followerid=parseInt(str.split("#")[2]);
+	var uploaderid=$(this).val();
+	
+if($(this).text()=="已关注"){	
+	console.log(uploaderid);
+	$.ajax({
+		url:"${pageContext.request.contextPath}/center/subdelete1?followerid="+followerid
+				+"&uploaderid="+uploaderid,
+		type:'GET',
+		success:function(){
+			alert("成功取消关注");
+			$("#sub_btn"+uploaderid.toString()).text("未关注");
+			
+			
+		}
+	});
+	}
+	if($(this).text()=="未关注"){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/center/subinsert?followerid="+followerid
+			+"&uploaderid="+uploaderid,
+			type:"GET",
+			success:function(){
+				alert("成功关注");
+				$("#sub_btn"+uploaderid.toString()).text("已关注");
+				
+			}
+			
+		})
+		
+	}
+	
+	
+	
+	
+	
+});
+
+
+
+
 
 </script>
 

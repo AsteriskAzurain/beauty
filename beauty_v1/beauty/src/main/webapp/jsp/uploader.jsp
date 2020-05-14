@@ -39,6 +39,7 @@
 <link
 	href='http://fonts.googleapis.com/css?family=Raleway:300,400,700,300italic,400italic'
 	rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="<%=path%>/css/custom.css">
 <!-- //Web-Fonts -->
 
 <script src="<%=path%>/js/ups/jquery.min.js"></script>
@@ -63,6 +64,9 @@
 					</div>
 					<!-- //logo -->
 					<div class="d-flex mt-lg-1 mt-sm-2 mt-3 justify-content-center">
+					<img id="headpic"
+							src="#"
+							class="headpic">
 						<!-- search -->
 						<div class="search-w3layouts mr-3">
 							<form action="#" method="post"
@@ -109,12 +113,12 @@
 						<div class="col-lg-2 mt-4"
 							style="height: 40px; text-align: center;">
 							<!-- 传入followerid和uploaderid -->
-							<%-- <c:if test="${empty sub}">
+							<%--  <c:if test="${empty sub}">
 								<a
 									href="#"
 									class="btn button-style" id="subscribe1">未关注</a>
-							</c:if> --%>
-
+							</c:if> 
+ --%>
 							<a href="#" class="btn button-style" id="subscribe"></a>
 
 							<div class="mt-3">
@@ -247,6 +251,26 @@
 
 	<script type="text/javascript">
 		$(function() {
+			var getpic3="${getpic3}";
+			//alert(getpic3);
+			var concatpic='/beauty/'+getpic3;
+			$("#headpic").attr('src',concatpic);
+			
+			var cookiestr = getCookie("user");
+			if (cookiestr != "")
+				var cookiename = cookiestr.split("#")[0];
+			var cookieid = cookiestr.split("#")[2];
+			$("#centername").text(cookiename + "的个人空间");
+			var url = "${pageContext.request.contextPath}/center/user_follow?followerid="
+					+ cookieid;
+			$("#userframe").attr("src", url);
+
+			var id=parseInt(cookieid);
+			$.ajax({
+				url:"${pageContext.request.contextPath}/center/getpic3?id="+id,
+				type:"GET",
+				success:function(){}
+			});
 			var b=2;
 			console.log("b="+typeof(b.toString()));
 			console.log('${fan}');

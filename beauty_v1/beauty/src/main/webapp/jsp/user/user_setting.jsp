@@ -113,6 +113,7 @@
 	<!-- <script src="vendor/chart.js/Chart.min.js"></script> -->
 	 <script src="<%=path%>/js/js.cookie.min.js"></script>
 	<script src="<%=path%>/js/front.js"></script>
+	<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
 	<script type="text/javascript">
 
 	$(document).ready(function(){
@@ -191,11 +192,6 @@
 								});
 							 //数据库Password,String型
 								var sqlpwd='${pwd}';
-								
-						
-							 
-							 
-							
 							//修改了user_setting对旧密码的判断，考虑到没记住密码的情况
 							
 						
@@ -207,12 +203,12 @@
 							
 							
 							
-							if (sqlpwd != oldpassword) {
+							if (sqlpwd != md5(oldpassword)) {
 								alert("旧密码不正确，无法进行修改操作");
 								return false;
 							}
 							//由于get到了数据库的密码，我们再得寸进尺亿点点
-							if(sqlpwd==password){
+							if(sqlpwd==md5(password)){
 								alert("新输入的密码不能与旧密码一致");
 								return false;
 								
@@ -236,7 +232,7 @@
 							//alert("id类型为"+typeof(parseInt(id)));
 							//定义传到后端的数据
 							var data1 = {
-								"password" : password,
+								"password" : md5(password),
 								"id" : id
 							};
 							$

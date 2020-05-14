@@ -25,6 +25,7 @@ import com.github.pagehelper.PageInfo;
 import com.ishang.beauty.entity.User;
 import com.ishang.beauty.service.UserService;
 import com.ishang.beauty.utils.DataResponse;
+import com.ishang.beauty.utils.Md5Utils;
 import com.ishang.beauty.utils.Msg;
 
 @Controller
@@ -72,7 +73,8 @@ public class UserController {
 			Model model, HttpServletRequest request, HttpServletResponse response) {
 		User record = new User();
 		record.setUsername(username);
-		record.setPassword(password);
+		//set加密的密码给result对象
+		record.setPassword(Md5Utils.md5(password));
 		// 判断是否记住密码
 		Boolean re = false;
 		String checkboxNum = request.getParameter("checkboxNum");
@@ -82,13 +84,14 @@ public class UserController {
 		}
 
 		List<User> result = service.findbyentity(record);
-		if (result.size() > 0 && result.get(0).getPassword().equals(password)) {
+		//此时取出的password是加密的password,
+		if (result.size() > 0 && result.get(0).getPassword().equals(Md5Utils.md5(password))) {
 			// 设置session
 			HttpSession session = request.getSession();
 			session.setAttribute("SESSION_UserName", result.get(0).getUsername());
-			session.setAttribute("SESSION_PassWord", result.get(0).getPassword());
+			session.setAttribute("SESSION_PassWord", password);
 			// 由于CookieVersion 0不支持逗号，因此换成#号
-			String loginInfo = result.get(0).getUsername() + "#" + result.get(0).getPassword() + "#"
+			String loginInfo = result.get(0).getUsername() + "#" + password + "#"
 					+ result.get(0).getId();
 			String loginInfo2 = result.get(0).getUsername() + "#" +'1'+ "#"
 					+ result.get(0).getId();
@@ -145,6 +148,8 @@ public class UserController {
 			return mv;
 		} else {
 			u.setDel_flag(1);
+			//将加密的密码传到数据库种
+			u.setPassword(Md5Utils.md5(u.getPassword()));
 			int r = service.addone(u);
 			// mv.addObject("success", "注册成功");
 			mv.setViewName("login.jsp");
@@ -164,6 +169,7 @@ public class UserController {
 	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
 	public String saveUser(@RequestBody User user) {
 		user.setDel_flag(1);
+		user.setPassword(Md5Utils.md5(user.getPassword()));
 		service.saveUser(user);
 		return "backuserList.jsp";
 	}
@@ -184,6 +190,7 @@ public class UserController {
 	public String DeleteUser(@RequestBody User user) {
 
 		System.out.println(user.getId());
+		//改：逻辑删除->del_flag设为1
 		service.deleteone(user.getId());
 		return "backuserList.jsp";
 

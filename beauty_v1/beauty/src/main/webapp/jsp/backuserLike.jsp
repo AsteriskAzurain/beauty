@@ -696,6 +696,7 @@
 				success : function() {
 					alert("修改数据成功");
 					$("#updateModal").modal('hide');
+					window.location.reload();
 					//window.location.href = "${pageContext.request.contextPath}/user/tologin";
 
 				}
@@ -716,7 +717,7 @@
 				var data={
 						"id":id
 				}
-				s
+				
 			
 				$.ajax({
 					url : "${pageContext.request.contextPath}/user/deleteUser",

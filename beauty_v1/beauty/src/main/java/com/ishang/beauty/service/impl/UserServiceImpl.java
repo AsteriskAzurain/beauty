@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
 	public int deleteone(int id) {
 		// TODO Auto-generated method stub
+		//改成逻辑删除
 		return dao.deleteByPrimaryKey(id);
 	}
 

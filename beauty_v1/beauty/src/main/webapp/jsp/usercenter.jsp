@@ -147,9 +147,9 @@
 
 	<script type="text/javascript">
 		$(function() {
-			var getpic="${getpic}";
+			var getpic2="${getpic2}";
 			//alert(getpic);
-			var concatpic='/beauty/'+getpic;
+			var concatpic='/beauty/'+getpic2;
 			$("#headpic").attr('src',concatpic);
 			
 			var cookiestr = getCookie("user");
@@ -163,7 +163,7 @@
 
 			var id=parseInt(cookieid);
 			$.ajax({
-				url:"${pageContext.request.contextPath}/center/getpic?id="+id,
+				url:"${pageContext.request.contextPath}/center/getpic2?id="+id,
 				type:"GET",
 				success:function(){}
 			});
