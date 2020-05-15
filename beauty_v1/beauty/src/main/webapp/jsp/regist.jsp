@@ -78,6 +78,7 @@
 						<h5 style="color: red">${errMsg}</h5>
 					</form>
 					<button type="submit" id="regbtn" class="btn btn-primary shadow px-5" id="regbtn">注册</button>
+					<button type="button" id="regbtn" class="btn btn-dark shadow px-5 ml-5" onclick="javascript:window.location.href='<%=path%>/'jsp/login.jsp">返回</button>
 				</div>
 			</div>
 			<p class="mt-5 mb-0 text-gray-400 text-center">Copyright &copy; 2020. reachableBeauty All rights reserved.</p>

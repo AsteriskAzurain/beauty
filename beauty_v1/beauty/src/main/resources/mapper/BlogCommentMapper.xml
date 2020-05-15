@@ -105,4 +105,9 @@
 		<![CDATA[ and createtime <= NOW()	]]>
 	</select>
 	
+	<!-- 获取某user的总获评数 -->
+	<select id="getusercmtnum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(cmts) FROM upblogcmts
+		WHERE upid=#{upid,jdbcType=INTEGER}
+	</select>
 </mapper>

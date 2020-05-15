@@ -98,4 +98,9 @@ public class UserServiceImpl implements UserService {
 	public List<UserFollow> FanList(Integer id) {
 		return followdao.selectFanList(id);
 	}
+
+	@Override
+	public List<User> backlogin(User record) {
+		return dao.backlogin(record.getUsername()	, record.getPassword());
+	}
 }

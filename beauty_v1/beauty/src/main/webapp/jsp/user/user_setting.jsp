@@ -191,7 +191,7 @@
 				contentType : 'application/json',
 				success : function(result) {
 					alert("密码修改成功，即将返回个人中心");
-					window.location.href = "${pageContext.request.contextPath}/center/tocenter";
+					window.parent.location.href = "${pageContext.request.contextPath}/center/tocenter";
 					}
 				});
 			alert("密码修改成功");

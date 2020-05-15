@@ -153,26 +153,6 @@
 						</div>
 					</div>
 
-					<!-- normal blog list -->
-					<div class="upblog-container">
-						<div class="upblog">
-							<div class="row p-4 upblog-word">
-								<div class="col-md-4">
-									<img alt="一张图片" src="/beauty/images/portfolio/folio-2.jpeg">
-								</div>
-								<div class="col-md-8">
-									<div class="my-2 btn" id="1" title="Read More" onclick="opencontent(this)">
-										<h4>颜九-粉底液测评（秋冬装）</h4>
-									</div>
-									<p>红榜
-										粉底液 牌子：欧莱雅 色号:#20（红帽子）
-										特点：适合大多数肤色偏白的妹子，需分区域送上妆，分左右半边脸，用刷子上妆效果好；轻薄不易闷痘，非常有高级感的哑光妆，但遮瑕效果差。
-										粉底液轻薄测试方法
-										先取一张无纺纱布在纱布上挤几滴粉底液，并放在加湿器的出气口。如果有水蒸气透过纱布冒出来，则说明这款粉底液非常轻薄， ...</p>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 			
 				<div class="col-sm-3 col-sm-offset-1 single-post-sidebar">
@@ -311,11 +291,11 @@
 							var year = cdate.getFullYear();
 							var month = cdate.getMonth()+1;
 							var day = cdate.getDate();
-							var hours = date.getHours();
-					        var minu = date.getMinutes();
+							var hours = cdate.getHours();
+					        var minu = cdate.getMinutes();
 							month = month < 10 ? "0"+month:month;
 							day = day < 10 ? "0"+day:day;
-							var datestr =year+'-'+mon+'-'+day+' '+hours+':'+minu;
+							var datestr =year+'-'+month+'-'+day+' '+hours+':'+minu;
 							
 							var ns = response.stararr[i]
 							var nc = response.cmtarr[i]
@@ -332,7 +312,7 @@
 									+ '<h4>' + title + '</h4>'
 									+ '</div>'
 									+ '<p>' + content + '</p>'
-									+ '<h6>2020-05-08 08:00</h6>'
+									+ '<h6>' + datestr + '</h6>'
 									+ '</div> </div> </div> '	)
 						}
 						myhtml += ' </div>'

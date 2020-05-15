@@ -62,4 +62,9 @@ public interface UserService {
 	//关注数，关注列表，粉丝数，粉丝列表 end
 	
 	public int updatepswd(User record);
+	
+	/**
+	 * 后台简易的登录验证
+	 * */
+	List<User> backlogin(User record);
 }

@@ -45,4 +45,8 @@ public interface UserMapper {
      * */
     int updatepswd(@Param("userid")int userid, @Param("pswd")String pswd);
 	
+    /**
+     * 后台简易的登陆验证
+     * */
+    List<User> backlogin(@Param("username")String username, @Param("password")String password);
 }

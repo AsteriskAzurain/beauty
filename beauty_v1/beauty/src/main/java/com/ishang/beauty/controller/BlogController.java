@@ -1,6 +1,7 @@
 package com.ishang.beauty.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ishang.beauty.entity.Blog;
 import com.ishang.beauty.entity.BlogStar;
 import com.ishang.beauty.entity.User;
 import com.ishang.beauty.entity.WholeComment;
 import com.ishang.beauty.service.BlogCommentService;
 import com.ishang.beauty.service.BlogService;
+import com.ishang.beauty.service.BlogTypeService;
 import com.ishang.beauty.service.UserService;
 
 @Controller    
@@ -38,12 +42,40 @@ public class BlogController {
 	private UserService userservice;
 	@Autowired
 	private BlogCommentService cmtservice;
+	@Autowired
+	private BlogTypeService typeservice;
+	
+	@ResponseBody
+	@RequestMapping(value = "/blog/getall", method = RequestMethod.GET)    
+    public Map<String, Object> findall(@RequestParam(value = "pn", defaultValue = "1") String strpn){    
 		
-	@RequestMapping("/blog/getall")    
-    public String findall(HttpServletRequest request,Model model){    
-		List<Blog> rstlist=service.findall();
-		model.addAttribute("bloglist", rstlist);
-		return "crud/blogTestList.jsp";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int pagesize=10;
+		int pn = Integer.parseInt(strpn);
+		// 在查询前设置limit
+		PageHelper.startPage(pn, pagesize);
+		List<Blog> rstlist=service.findall();				
+		PageInfo<Blog> page = new PageInfo<Blog>(rstlist);
+		System.out.println("page:"+pn+": size="+rstlist.size());
+		map.put("rstmap", rstlist);
+		map.put("pageinfo", page);
+		
+		String[] typelist = 	new String[pagesize];
+		int[] starlist = new int[pagesize];
+		int[] cmtlist = new int[pagesize];
+		
+		for(int i=0; i<rstlist.size(); i++) {
+			int id=rstlist.get(i).getId();
+			typelist[i]=typeservice.findbyid(rstlist.get(i).getTypeid()).getTypename();
+			starlist[i]=service.getnum(id, "star");
+			cmtlist[i]=service.getnum(id, "cmt");
+		}
+		
+		map.put("typemap", typelist);
+		map.put("starmap", starlist);
+		map.put("cmtmap", cmtlist);
+		return map;
 	}
 	
 	@RequestMapping("/blog/getrec")    
@@ -83,13 +115,14 @@ public class BlogController {
 	public String searchblog(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
 		request.setCharacterEncoding("UTF-8");
 		String searchname=request.getParameter("searchname");
-//		System.out.println(searchname);
+//		System.out.println(searchname);	
 		Blog record=new Blog();
 		record.setTitle(searchname);
 		List<Blog> rstlist= service.findbyentity(record);
 		model.addAttribute("searchresult", rstlist);
 		return "searchresult.jsp";
 	}
+	
 	
 	@RequestMapping("/content")
 	public String blogcontent(HttpServletRequest request,Model model) {

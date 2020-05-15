@@ -134,6 +134,7 @@ public class UserController {
 			return mv;
 		} else {
 			u.setDel_flag(1);
+			u.setProfileimg("images/userimg/default.jpg");
 			int r = service.addone(u);
 			// mv.addObject("success", "注册成功");
 			mv.setViewName("login.jsp");
@@ -153,6 +154,7 @@ public class UserController {
 	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
 	public String saveUser(@RequestBody User user) {
 		user.setDel_flag(1);
+		user.setProfileimg("images/userimg/default.jpg");
 		service.saveUser(user);
 		return "backuserList.jsp";
 	}
@@ -160,8 +162,6 @@ public class UserController {
 	// userList界面的update模态框获取用户信息
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	public String UpdateUser(@RequestBody User user, Model model) {
-
-		
 		user.setDel_flag(1);
 		service.updateone(user);
 		model.addAttribute("user", user);
@@ -184,9 +184,10 @@ public class UserController {
 		PageHelper.startPage(pn, 5);
 		List<User> list = service.selectLike(username);
 		PageInfo<User> page = new PageInfo<User>(list, 5);
-		System.out.println(page.getList());
+		//System.out.println(page.getList());
 
-		ModelAndView mv = new ModelAndView("backuserLike.jsp");
+//		ModelAndView mv = new ModelAndView("backuserLike.jsp");
+		ModelAndView mv = new ModelAndView("../ms/ms-user-page.jsp");
 		mv.addObject("pageInfo", page);
 
 		// 设置将username传入cookie

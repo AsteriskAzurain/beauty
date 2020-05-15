@@ -41,4 +41,9 @@ public class BlogTypeServiceImpl implements BlogTypeService {
 		return dao.selectlike(record);
 	}
 
+	@Override
+	public BlogType findbyid(int id) {
+		return dao.selectByPrimaryKey(id);
+	}
+
 }
