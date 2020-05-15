@@ -44,6 +44,12 @@
 		window.scrollTo(0, 1);
 	}
 </script>
+<style>
+.carousel-item img{
+	height: 450px;
+	object-fit: cover;
+}
+</style>
 </head>
 <body>
 	<!-- main banner -->
@@ -101,28 +107,28 @@
 			<!-- 轮播图片 -->
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<img src="https://static.runoob.com/images/mix/img_fjords_wide.jpg">
+					<img src="<%=path%>/${reclist[0].picUrl1 }" alt="背景图片">
 					<div class="carousel-caption">
 						<h3>${reclist[0].title }</h3>
 						<p>${ fn:substring(reclist[0].content, 0, 20) } ...</p>
 					</div>
 				</div>
 				<div class="carousel-item">
-					<img src="https://static.runoob.com/images/mix/img_nature_wide.jpg">
+					<img src="<%=path%>/${reclist[1].picUrl1 }" alt="背景图片">
 					<div class="carousel-caption">
 						<h3>${reclist[1].title }</h3>
 						<p>${ fn:substring(reclist[1].content, 0, 20) } ...</p>
 					</div>
 				</div>
 				<div class="carousel-item">
-					<img
-						src="https://static.runoob.com/images/mix/img_mountains_wide.jpg">
+					<img src="<%=path%>/${reclist[2].picUrl1 }" alt="背景图片">
 					<div class="carousel-caption">
 						<h3>${reclist[2].title }</h3>
 						<p>${ fn:substring(reclist[2].content, 0, 20) } ...</p>
 					</div>
 				</div>
 			</div>
+			<!-- 轮播结束 -->
 
 			<!-- 左右切换按钮 -->
 			<a class="carousel-control-prev" href="#index_slide" data-slide="prev">
@@ -149,7 +155,7 @@
 				<c:forEach items="${updateuplist}" var="list" varStatus="status">
 					<span>
 						<a href="#" data-toggle="collapse" data-target="#up${list.id}">
-							<img class="uploader" src="<%=path%>/images/kb.jpeg" alt="" />
+							<img class="uploader img-thumbnail" src="<%=path%>/${list.profileimg }" alt="暂无头像"  />
 						</a>
 					</span>
 				</c:forEach>
@@ -163,16 +169,11 @@
 				<c:forEach items="${updatemap}" var="list" varStatus="status">
 					<div id="up${list.getKey() }" class="collapse card-body">
 						<c:forEach items="${list.getValue() }" var="blog">
-							<div class="row align-items-center flex-row ">
-								<img alt="" src="<%=path%>/images/oldE.jpg" />
+							<div class="row align-items-center flex-row mb-5">
+								<img alt="暂无预览图" src="<%=path%>/${blog.picUrl1 }"  class="img-thumbnail"/>
 								<div class="col-lg-10">
 									<h4 class="blogcontent" id="${blog.id }" >${blog.title }</h4>
 									<p>${ fn:substring(blog.content, 0, 100) } ...
-										<!-- <br>第一行为数据库数据，这一行开始是模拟数据。模拟登录用户为（Userid=2）
-										<br>首页轮播图：最新三个推荐blog的头图
-										<br>关注：显示最近三天有更新的关注up主
-										<br>手风琴展开：最近三天关注up主更新的blog
-										<br>下方：所有推荐blog -->
 									</p>
 								</div>
 							</div>
@@ -194,7 +195,7 @@
 
 					<div class="col-lg-3 about-grid ">
 						<div class="about-grid-main" >
-							<img src="<%=path%>/images/qzgs_6.jpg" alt="" class="img-fluid">
+							<img src="<%=path%>/${blog.picUrl1}" alt="" class="img-fluid">
 							 <a href="#" class="button-w3ls btn  blogcontent"   id="${blog.id }"> Read More
 								<p>${blog.title }</p> 
 							</a>

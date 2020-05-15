@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,11 @@ public class ManageSystemController {
 	private BlogCommentService cmtservice;
 	@Autowired
 	private BlogTypeService typeservice;
+	
+	@RequestMapping("/index")
+	public String toindex(Model model) {
+		return "../ms/index.jsp";
+	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String backlogin(@RequestParam("username") String username,@RequestParam("password") String password,
@@ -76,14 +82,10 @@ public class ManageSystemController {
 				response.addCookie(newCookie);
 			}
 			int roleid = result.get(0).getRoleid();
-			if(roleid==1) {  //admin
-				request.setAttribute("role", "admin");
-				return "../ms/ms-user.jsp"; 
-			}
-			else if(roleid==2) return "../index";
-			else {  //uploader
-				request.setAttribute("role", "uploader");
-				return "../ms/ms-blog.jsp"; 
+			if(roleid==2) return "../index";
+			else { 
+				session.setAttribute("roleid", roleid);
+				return "../back/index"; 
 			}
 		} else {
 			request.setAttribute("msg", "用户名或密码错误，请检查后再试。");
@@ -93,7 +95,7 @@ public class ManageSystemController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public Map<String, Object> backsearch(@RequestParam("keyword") String keyword) throws UnsupportedEncodingException {
+	public Map<String, Object> backsearch(@RequestParam("keyword") String keyword,HttpServletRequest request) throws UnsupportedEncodingException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		keyword=URLDecoder.decode(keyword, "UTF-8");
 		System.out.println(keyword);

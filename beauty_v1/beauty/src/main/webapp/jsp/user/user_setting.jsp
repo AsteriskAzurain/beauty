@@ -43,11 +43,9 @@
 									<input type="submit">
 								</form>
 								-->
-									<input type="hidden" id="id" name="id"> <input
-										type="file" class="custom-file-input" name="file" id="file"
-										aria-describedby="inputGroupFileAddon01"
-										placeholder="Upload your profile pic..."> <label
-										class="custom-file-label" for="inputGroupFile01">选择图片</label>
+									<input type="hidden" id="id" name="id"> 
+									<input type="file" class="custom-file-input" name="file" id="file" aria-describedby="inputGroupFileAddon01" placeholder="Upload your profile pic...">
+										 <label class="custom-file-label" for="file">选择图片</label>
 
 
 								</div>
@@ -106,17 +104,8 @@
 	<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
 	<script type="text/javascript">
 	
-	$(document).ready(function(){
-		  $("#inputGroupFile01").change(function(){
-			  var text=$("#inputGroupFile01").val();
-			  console.info(text);
-			  var i=text.lastIndexOf("\\");
-			  text=text.substring(i+1);
-			  $(".custom-file-label").text(text);
-		  });
-		});
-	
 		$(function() {
+			
 			var cookiestr = getCookie("user");
 			if (cookiestr != "") {
 				//将cookie中的id取出，与文件一起传到后端
@@ -127,8 +116,8 @@
 				alert("当前用户id为："+cookieid);	
 				 */
 			}
-			$("#inputGroupFile01").change(function(){
-				  var text=$("#inputGroupFile01").val();
+			$("#file").change(function(){
+				  var text=$("#file").val();
 				  console.info(text);
 				  var i=text.lastIndexOf("\\");
 				  text=text.substring(i+1);
