@@ -37,7 +37,7 @@
 					<div class="d-flex mt-lg-1 mt-sm-2 mt-3 justify-content-center">
 
 						<!-- 头像 -->
-						<img src="<%=path%>/images/userimg/18470736f72f497ab6019a616b856456.jpeg" class="headpic"> 
+						<img id="headpic" src="#" class="headpic">
 
 						<!-- search -->
 						<div class="search-w3layouts mr-3">
@@ -70,7 +70,6 @@
 			<div class="container">
 				<div class="row" style="width: 100%; height: 300px">
 					<div class="up_center">
-						<!-- <a href="index.jsp"><h2>xx的个人中心</h2></a> -->
 						<h4>
 							<label id="centername" class="centername" style="color: white"></label>
 						</h4>
@@ -119,9 +118,9 @@
 	<script type="text/javascript">
 
 		$(function() {
-			var getpic = "${getpic}";
+			var getpic2="${getpic2}";
 			//alert(getpic);
-			var concatpic = '/beauty/' + getpic;
+			var concatpic = '/beauty/' + getpic2;
 			$("#headpic").attr('src', concatpic);
 
 			var cookiestr = getCookie("user");
@@ -134,7 +133,7 @@
 
 			var id = parseInt(cookieid);
 			$.ajax({
-				url : "<%=path%>/center/getpic?id="+ id,
+				url : "<%=path%>/center/getpic2?id="+ id,
 				type : "GET",
 				success : function() {
 					console.info("user info succeed")

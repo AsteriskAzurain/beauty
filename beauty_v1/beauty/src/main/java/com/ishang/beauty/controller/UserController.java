@@ -24,6 +24,7 @@ import com.github.pagehelper.PageInfo;
 import com.ishang.beauty.entity.User;
 import com.ishang.beauty.service.UserService;
 import com.ishang.beauty.utils.EncodingTool;
+import com.ishang.beauty.utils.Md5Utils;
 
 @Controller
 @RequestMapping("/user")
@@ -56,7 +57,7 @@ public class UserController {
 		System.out.println("处理后："+username);
 		User record = new User();
 		record.setUsername(username);
-		record.setPassword(password);
+		record.setPassword(Md5Utils.md5(password));
 		// 判断是否记住密码
 		Boolean re = false;
 		String checkboxNum = request.getParameter("checkboxNum");
@@ -66,28 +67,28 @@ public class UserController {
 		}
 
 		List<User> result = service.findbyentity(record);
-		if (result.size() > 0 && result.get(0).getPassword().equals(password)) {
+		if (result.size() > 0 && result.get(0).getPassword().equals(Md5Utils.md5(password))) {
 			// 设置session
 			HttpSession session = request.getSession();
 			session.setAttribute("SESSION_UserName", result.get(0).getUsername());
-			session.setAttribute("SESSION_PassWord", result.get(0).getPassword());
+			session.setAttribute("SESSION_PassWord", password);
 			// 由于CookieVersion 0不支持逗号，因此换成#号
 			// fbw: username涉及到特殊字符 如空格 对string编码 使用时需要解码
 			//Js对空格的编码后得到的是"%20"; Java对空格的编码后得到的是"+"；
 			String loginname = URLEncoder.encode(result.get(0).getUsername(), String.valueOf(Charsets.UTF_8));
 			loginname=loginname.replaceAll("\\+", "%20");
 			System.out.println(loginname);
-			String loginInfo = loginname + "#" + result.get(0).getPassword() + "#" + result.get(0).getId();
+			String loginInfo = loginname + "#" + password + "#" + result.get(0).getId();
 			String loginInfo2 = loginname + "#" +'1'+ "#" + result.get(0).getId();
 			// 如果记住密码设置cookie
 			if (re) {
-				Cookie userCookie = new Cookie("user", loginInfo.toString());
+				Cookie userCookie = new Cookie("user", loginInfo);
 				// 设置保存7天cookie
 				userCookie.setMaxAge(7 * 24 * 60 * 60);
 				userCookie.setPath("/");
 				response.addCookie(userCookie);
 			} else {// 没有选中记住密码，删除cookie
-				Cookie newCookie = new Cookie("user", loginInfo2.toString());
+				Cookie newCookie = new Cookie("user", loginInfo2);
 				newCookie.setMaxAge(7 * 24 * 60 * 60);
 				newCookie.setPath("/");
 				// 覆盖之前的userCookie
@@ -133,6 +134,8 @@ public class UserController {
 			mv.setViewName("regist.jsp");
 			return mv;
 		} else {
+			//将加密的密码传到数据库中
+			u.setPassword(Md5Utils.md5(u.getPassword()));
 			u.setDel_flag(1);
 			u.setProfileimg("images/userimg/default.jpg");
 			int r = service.addone(u);
@@ -153,6 +156,7 @@ public class UserController {
 	// userlist界面的新增模态框新建用户
 	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
 	public String saveUser(@RequestBody User user) {
+		user.setPassword(Md5Utils.md5(user.getPassword()));
 		user.setDel_flag(1);
 		user.setProfileimg("images/userimg/default.jpg");
 		service.saveUser(user);

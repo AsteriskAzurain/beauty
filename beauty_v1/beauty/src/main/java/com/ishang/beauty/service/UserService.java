@@ -61,6 +61,12 @@ public interface UserService {
 	List<UserFollow> FanList(Integer id);
 	//关注数，关注列表，粉丝数，粉丝列表 end
 	
+	List<UserFollow> Subscribe(Integer followerid,Integer uploaderid);
+	
+	int subinsert(Integer followerid,Integer uploaderid);
+	
+	int subdelete(Integer followerid,Integer uploaderid);
+	
 	public int updatepswd(User record);
 	
 	/**

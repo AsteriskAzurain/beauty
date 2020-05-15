@@ -48,6 +48,17 @@ public class User implements Serializable {
 	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
+	
+	//新增字段，用于FanList判断按钮初始状态
+	private Boolean sub;
+	
+	public Boolean getSub() {
+		return sub;
+	}
+
+	public void setSub(Boolean sub) {
+		this.sub = sub;
+	}
 
 	public Integer getId() {
 		return id;
