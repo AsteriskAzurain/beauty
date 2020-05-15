@@ -149,7 +149,7 @@
 				<c:forEach items="${updateuplist}" var="list" varStatus="status">
 					<span>
 						<a href="#" data-toggle="collapse" data-target="#up${list.id}">
-							<img class="uploader" src="<%=path%>/images/kb.jpeg" alt="" />
+							<img class="uploader" src="<%=path%>/${list.profileimg }" alt="" />
 						</a>
 					</span>
 				</c:forEach>
@@ -194,7 +194,7 @@
 
 					<div class="col-lg-3 about-grid ">
 						<div class="about-grid-main" >
-							<img src="<%=path%>/images/qzgs_6.jpg" alt="" class="img-fluid">
+							<img src="<%=path%>/${blog.picUrl1}" alt="" class="img-fluid">
 							 <a href="#" class="button-w3ls btn  blogcontent"   id="${blog.id }"> Read More
 								<p>${blog.title }</p> 
 							</a>

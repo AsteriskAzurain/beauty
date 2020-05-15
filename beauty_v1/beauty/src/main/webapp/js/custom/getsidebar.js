@@ -32,7 +32,7 @@ function afterajax(data, userid) {
 		var title = data.rstlist[i].title
 		var createtime = data.rstlist[i].createtime
 		var picurl =  data.rstlist[i].picUrl1
-		picurl = testpicurl
+		//picurl = testpicurl
 		
 		var date=new Date(parseInt(createtime)* 1000);
 		var mon = date.getMonth()+1;
