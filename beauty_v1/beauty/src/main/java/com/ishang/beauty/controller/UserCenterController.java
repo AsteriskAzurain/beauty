@@ -50,7 +50,12 @@ public class UserCenterController {
 		// 定义文件保存的本地路径
 		// fbw: "D:\\git\\repository\\beauty\\beauty_v1\\beauty\\src\\main\\webapp\\images\\userimg"
 //		String localPath = "C:\\Users\\24466\\Documents\\GitHub\\beauty\\beauty_v1\\beauty\\src\\main\\webapp\\images\\userimg\\";
-		String localPath =  "D:\\git\\repository\\beauty\\beauty_v1\\beauty\\src\\main\\webapp\\images\\userimg";
+		//String localPath =  "D:\\git\\repository\\beauty\\beauty_v1\\beauty\\src\\main\\webapp\\images\\userimg";
+		
+		String tomcatpath=System.getProperty("catalina.home");
+		String addpath="\\webapps\\beauty\\images\\userimg\\";
+		String localPath=tomcatpath+addpath;
+
 		// 定义文件名
 		String filename = null;
 		if (!user.getFile().isEmpty()) {
