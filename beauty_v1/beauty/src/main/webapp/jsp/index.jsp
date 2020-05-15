@@ -61,7 +61,7 @@
 					<!-- //logo -->
 					<div class="d-flex mt-lg-1 mt-sm-2 mt-3 justify-content-center">
 					<!-- 头像 -->
-					<img src="<%=path%>/${getpic}" class="headpic">
+					<img src="<%=path%>/${getpic2}" class="headpic">
 					<label id="welcomemsg" class="welcomemsg" style="color:#705ecf"></label>
 					
 						<!-- search -->
@@ -75,7 +75,6 @@
 						</div>
 						<!-- //search -->
 						<!-- 登出&个人中心 -->
-						
 						<a class="dwn-w3ls btn mr-1" href="${pageContext.request.contextPath}/center/tocenter" target="_blank">
 							<span class="fa fa-user-circle-o" title="个人中心"></span>
 						</a> 
@@ -149,10 +148,10 @@
 				</c:if>
 				<c:forEach items="${updateuplist}" var="list" varStatus="status">
 					<span>
-					<a href="#" data-toggle="collapse" data-target="#up${list.id}">
-						<img class="uploader" src="<%=path%>/images/kb.jpeg" alt="" />
-					</a>
-				</span>
+						<a href="#" data-toggle="collapse" data-target="#up${list.id}">
+							<img class="uploader" src="<%=path%>/images/kb.jpeg" alt="" />
+						</a>
+					</span>
 				</c:forEach>
 
 			</div>
@@ -235,6 +234,9 @@
 
 	<script type="text/javascript">
 		$(function(){
+			var getpic2="${getpic2}";
+			var concatpic='/beauty/'+getpic2;
+			$("#headpic").attr('src',concatpic);
 			var cookiestr = getCookie("user");
 			if(cookiestr!=""){
 				var cookiename=cookiestr.split("#")[0];

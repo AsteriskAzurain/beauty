@@ -35,4 +35,9 @@ public interface BlogTypeService {
 	 * */
 	List<BlogType> findbyentity(BlogType record);
 	
+	/**
+	 * 按id查找
+	 * */
+	BlogType findbyid(int id);
+	
 }

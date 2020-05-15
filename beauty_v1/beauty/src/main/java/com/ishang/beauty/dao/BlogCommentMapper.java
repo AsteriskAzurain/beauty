@@ -42,4 +42,9 @@ public interface BlogCommentMapper {
      * 获取某blog的评论数
      * */
     int getblogcmt(int blogid);
+    
+    /**
+     * 获取某user的总获评数
+     * */
+    int getusercmtnum(int upid);
 }

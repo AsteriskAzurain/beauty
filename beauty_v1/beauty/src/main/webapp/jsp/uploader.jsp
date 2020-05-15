@@ -32,6 +32,7 @@
 	<!-- Web-Fonts -->
 	<link href="http://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=devanagari,latin-ext" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Raleway:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="<%=path%>/css/custom.css">
 	<!-- //Web-Fonts -->
 
 	<script src="<%=path%>/js/ups/jquery.min.js"></script>
@@ -54,6 +55,7 @@
 					</div>
 					<!-- //logo -->
 					<div class="d-flex mt-lg-1 mt-sm-2 mt-3 justify-content-center">
+					<img id="headpic" src="#" class="headpic">
 						<!-- search -->
 						<div class="search-w3layouts mr-3">
 							<form action="<%=path%>/jsp/searchresult.jsp" method="post" class="search-bottom-wthree d-flex">
@@ -64,11 +66,11 @@
 							</form>
 						</div>
 						<!-- //search -->
-						<!-- 登出&个人中心  --> <!-- todo:更换索引userspace的url -->
-						<a class="dwn-w3ls btn mr-1" href="<%=path%>/jsp/usercenter.jsp" target="_blank">
+						<!-- 登出&个人中心  --> 
+						<a class="dwn-w3ls btn mr-1" href="${pageContext.request.contextPath}/center/tocenter" target="_blank">
 							<span class="fa fa-user-circle-o" title="个人中心"></span>
 						</a> 
-						<a class="dwn-w3ls btn" href="<%=path%>/jsp/login.jsp" target="_self"> 
+						<a class="dwn-w3ls btn" href="${pageContext.request.contextPath}/user/logout" target="_self">
 							<span class="fa fa-sign-out" title="退出登录"></span>
 						</a>
 						<!-- //logout&usercenter -->
@@ -96,9 +98,10 @@
 							<h4>欢迎来到我的空间</h4>
 						</div>
 						<div class="col-lg-2 mt-4" style="height: 40px; text-align: center;">
-							<a href="#" class="btn button-style">关注 Follow</a>
+							<!-- 传入followerid和uploaderid -->
+							<a href="#" class="btn button-style"  id="subscribe"></a>
 							<div class="mt-3">
-								<a href="${pageContext.request.contextPath}/center/upfanlist?id=${ulist.id}">粉丝数：${fan}</a>
+								<a href="${pageContext.request.contextPath}/center/upfanlist?id=${ulist.id}" id="fancount">粉丝数：${fan}</a>
 							</div>
 						</div>
 					</div>
@@ -153,26 +156,6 @@
 						</div>
 					</div>
 
-					<!-- normal blog list -->
-					<div class="upblog-container">
-						<div class="upblog">
-							<div class="row p-4 upblog-word">
-								<div class="col-md-4">
-									<img alt="一张图片" src="/beauty/images/portfolio/folio-2.jpeg">
-								</div>
-								<div class="col-md-8">
-									<div class="my-2 btn" id="1" title="Read More" onclick="opencontent(this)">
-										<h4>颜九-粉底液测评（秋冬装）</h4>
-									</div>
-									<p>红榜
-										粉底液 牌子：欧莱雅 色号:#20（红帽子）
-										特点：适合大多数肤色偏白的妹子，需分区域送上妆，分左右半边脸，用刷子上妆效果好；轻薄不易闷痘，非常有高级感的哑光妆，但遮瑕效果差。
-										粉底液轻薄测试方法
-										先取一张无纺纱布在纱布上挤几滴粉底液，并放在加湿器的出气口。如果有水蒸气透过纱布冒出来，则说明这款粉底液非常轻薄， ...</p>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 			
 				<div class="col-sm-3 col-sm-offset-1 single-post-sidebar">
@@ -215,6 +198,104 @@
 	<script src="<%=path%>/js/custom/getcookie.js"></script>
 
 	<script type="text/javascript" src="<%=path%>/js/custom/getsidebar.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+			var getpic3="${getpic3}";
+			//alert(getpic3);
+			var concatpic='/beauty/'+getpic3;
+			$("#headpic").attr('src',concatpic);
+			
+			var cookiestr = getCookie("user");
+			if (cookiestr != "")
+				var cookiename = cookiestr.split("#")[0];
+			var cookieid = cookiestr.split("#")[2];
+			$("#centername").text(cookiename + "的个人空间");
+			var url = "${pageContext.request.contextPath}/center/user_follow?followerid=" + cookieid;
+			$("#userframe").attr("src", url);
+	
+			var id=parseInt(cookieid);
+			$.ajax({
+				url:"${pageContext.request.contextPath}/center/getpic3?id="+id,
+				type:"GET",
+				success:function(){}
+			});
+			var b=2;
+			console.log("b="+typeof(b.toString()));
+			console.log('${fan}');
+			console.log('${fanlist}');
+			console.log('${uplist}');
+	
+			var getid = '${uplist.get(0).id}';
+			console.log(getid);
+			var sublist = '${sub}';
+			console.log("text=" + '${text}');
+			var uploaderid = '${uplist.get(0).id}';
+	
+			var str = getCookie("user");
+			//followerid
+			//从后端获取判断信息
+			var followerid = str.split("#")[2];
+			$.ajax({
+				url : "${pageContext.request.contextPath}/center/subscribe?uploaderid=" + uploaderid
+						+ "&followerid=" + followerid,
+				type : "GET",
+				success : function() {
+					$("#subscribe").text('${text}');
+				}
+			});		
+		});		
+	
+		//subscribe是关注/未关注的btn
+		$("#subscribe").click( function() {
+			//返回的select列表
+			//后端返回关注/没关注的字符串
+			var text = $("#subscribe").text();
+	
+			var uploaderid = '${uplist.get(0).id}';
+	
+			var str = getCookie("user");
+			//followerid
+			//从后端获取判断信息
+			var followerid = str.split("#")[2];
+			//逻辑:if第一次把关注->取消关注，而‘${sub}’的值未变，第二次关注就会错误，所以不能用sub来判断，要用text值判断
+	
+			//关注->取消关注
+			if (text == "已关注") {
+				$.ajax({
+					url : "${pageContext.request.contextPath}/center/subdelete?uploaderid="
+							+ uploaderid
+							+ "&followerid="
+							+ followerid,
+					type : "GET",
+					success : function() {
+						alert("取消关注成功");
+						alert("请手动刷新页面以保证粉丝数正常显示");
+						$("#subscribe").text("未关注");
+						window.location.reload();
+					}
+				});
+			}
+			//未关注->加关注
+			else {
+				$.ajax({
+					url : "${pageContext.request.contextPath}/center/subinsert?uploaderid="
+							+ uploaderid
+							+ "&followerid="
+							+ followerid,
+					type : "GET",
+					success : function() {
+						alert("关注成功");
+						alert("请手动刷新页面以保证粉丝数正常显示");
+						$("#subscribe").text("已关注");
+						window.location.reload();
+					}
+				});
+			}
+		});
+
+	</script>
+	
 	<script type="text/javascript">
 	
 		var upid=<%=request.getParameter("uploaderid")%>
@@ -311,11 +392,11 @@
 							var year = cdate.getFullYear();
 							var month = cdate.getMonth()+1;
 							var day = cdate.getDate();
-							var hours = date.getHours();
-					        var minu = date.getMinutes();
+							var hours = cdate.getHours();
+					        var minu = cdate.getMinutes();
 							month = month < 10 ? "0"+month:month;
 							day = day < 10 ? "0"+day:day;
-							var datestr =year+'-'+mon+'-'+day+' '+hours+':'+minu;
+							var datestr =year+'-'+month+'-'+day+' '+hours+':'+minu;
 							
 							var ns = response.stararr[i]
 							var nc = response.cmtarr[i]
@@ -332,7 +413,7 @@
 									+ '<h4>' + title + '</h4>'
 									+ '</div>'
 									+ '<p>' + content + '</p>'
-									+ '<h6>2020-05-08 08:00</h6>'
+									+ '<h6>' + datestr + '</h6>'
 									+ '</div> </div> </div> '	)
 						}
 						myhtml += ' </div>'

@@ -46,7 +46,6 @@
 			birthday = #{birthday,jdbcType=DATE},
 			school = #{school,jdbcType=VARCHAR},
 			introduction = #{introduction,jdbcType=VARCHAR},
-			profileimg = #{profileimg,jdbcType=VARCHAR},
 			del_flag = #{del_flag,jdbcType=BIT}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -61,7 +60,6 @@
 			birthday = #{birthday,jdbcType=DATE},
 			school = #{school,jdbcType=VARCHAR},
 			introduction = #{introduction,jdbcType=VARCHAR},
-			profileimg = #{profileimg,jdbcType=VARCHAR},
 			del_flag = #{del_flag,jdbcType=BIT}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -116,5 +114,11 @@
 			`password`  = #{pswd}
 		WHERE id= #{userid}
 	</update>
+	
+	<select id="backlogin" resultMap="BaseResultMap">
+		select id, username, `password`, roleid, sex, birthday, school, introduction, profileimg, del_flag
+		from user
+		where username=#{username} and password=#{password}
+	</select>
 	
 </mapper>

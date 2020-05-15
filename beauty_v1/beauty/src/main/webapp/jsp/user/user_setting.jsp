@@ -103,7 +103,7 @@
 	 <script src="<%=path%>/js/js.cookie.min.js"></script>
 	<script src="<%=path%>/js/front.js"></script>
 	<script src="<%=path%>/js/custom/getcookie.js"></script>
-	
+	<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
 	<script type="text/javascript">
 	
 	$(document).ready(function(){
@@ -179,7 +179,7 @@
 			//alert("id类型为"+typeof(parseInt(id)));
 			//定义传到后端的数据
 			var data1 = {
-				"password" : password,
+				"password" : md5(password),
 				"id" : id
 			};
 			url="<%=path%>/center/modifypwd"
@@ -191,7 +191,7 @@
 				contentType : 'application/json',
 				success : function(result) {
 					alert("密码修改成功，即将返回个人中心");
-					window.location.href = "${pageContext.request.contextPath}/center/tocenter";
+					window.parent.location.href = "${pageContext.request.contextPath}/center/tocenter";
 					}
 				});
 			alert("密码修改成功");
@@ -212,7 +212,7 @@
 			console.info(sqlpwd)
 			
 			//修改了user_setting对旧密码的判断，考虑到没记住密码的情况
-			if (sqlpwd != oldpassword) {
+			if (sqlpwd != md5(oldpassword)) {
 				alert("旧密码不正确，无法进行修改操作");
 				return false;
 			}

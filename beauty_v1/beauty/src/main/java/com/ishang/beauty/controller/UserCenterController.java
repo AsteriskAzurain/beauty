@@ -37,10 +37,10 @@ public class UserCenterController {
 	private UserServiceImpl service;
 
 	// 修改头像
-	@RequestMapping("/toupdateimg")
-	public String updateImg() {
-		return "updateimg.jsp";
-	}
+	/* delete date: 0515
+	 * @RequestMapping("/toupdateimg") public String updateImg() { return
+	 * "updateimg.jsp"; }
+	 */
 
 	// 头像上传
 	@RequestMapping("/upload")
@@ -95,12 +95,21 @@ public class UserCenterController {
 
 	@RequestMapping("/getpic2")
 	public String getPic2(@RequestParam Integer id, HttpSession session) {
-		String getpic = service.selectImg(id);
-		System.out.println(getpic);
-		session.setAttribute("getpic", getpic);
+		String getpic2 = service.selectImg(id);
+		System.out.println(getpic2);
+		session.setAttribute("getpic2", getpic2);
 		// model.addAttribute("getpic", getpic);
 //		return "index.jsp";
 		return "../index";
+	}
+	
+	@RequestMapping("/getpic3")
+	public String getPic3(@RequestParam Integer id, HttpSession session) {
+		String getpic3 = service.selectImg(id);
+		System.out.println(getpic3);
+		session.setAttribute("getpic3", getpic3);
+		// model.addAttribute("getpic", getpic);
+		return "uploader.jsp";
 	}
 	// 修改密码
 	@RequestMapping(value = "/modifypwd",method = RequestMethod.POST)
@@ -218,5 +227,113 @@ public class UserCenterController {
 		return "uploaderFanList.jsp";
 	}
 	
+	// 关注功能前，判断是否关注
+	@RequestMapping("/subscribe")
+	public String subscribe(@RequestParam Integer followerid, @RequestParam Integer uploaderid, Model model,
+			HttpSession session) {
+		// 传入两个id，followerid-关注>uploaderid
+		// 判断是否已经关注
+		List<UserFollow> sub = service.Subscribe(followerid, uploaderid);
+		/*
+		 * if(sub==null) { //未关注的话，插入新的关注信息 int count=service.subinsert(followerid,
+		 * uploaderid); System.out.println(count); }
+		 */
+		String text = "";
+		if (sub.isEmpty())
+			text = "未关注";
+		else {
+			text = "已关注";
+		}
+		System.out.println(text);
+		session.setAttribute("text", text);
+		session.setAttribute("sub", sub);
+
+		System.out.println(sub);
+		return "uploader.jsp";
+	}
+
+	// followerid不变，uploaderid应该从遍历的列表中取，只是返回两个不同的页面(似乎不能共用一个)
+	@RequestMapping("/subscribelist")
+	public String subscribe1(@RequestParam Integer followerid, Integer[] arr, Model model, HttpSession session) {
+		// 传入两个id，followerid-关注>uploaderid
+		// 判断是否已经关注
+
+		System.out.println("arr值为" + arr);
+		int uploaderid=0;
+		String []arr2 = new String[arr.length];
+		
+		for(int i=0;i<arr.length;i++ ) {
+		         uploaderid=arr[i];
+		List<UserFollow> sub = service.Subscribe(followerid, uploaderid);
+		// 如果未关注->text=1,关注->text=2
+		System.out.println(sub);
+		String text1;
+		if (sub.isEmpty())
+			text1 = "未关注";
+		else {
+			text1 = "已关注";
+		}
 	
+		arr2[i]=text1;
+		}
+		System.out.println(arr2);
+		
+		session.setAttribute("arr2", arr2);
+		
+		return "uploaderFanList.jsp";
+
+	}
+
+	// 如果是未关注->，调用此接口
+	@RequestMapping("/subinsert")
+	public String subins(@RequestParam Integer followerid, @RequestParam Integer uploaderid, Model model,
+			HttpSession session) {
+		int ins = service.subinsert(followerid, uploaderid);
+		model.addAttribute("success", "已成功关注");
+		return "uploader.jsp";
+
+	}
+
+	// 同上，用于fanlist
+	@RequestMapping("/subinsert1")
+	public String subins1(@RequestParam Integer followerid, @RequestParam Integer uploaderid, Model model,
+			HttpSession session) {
+
+		// 判断是否已经关注
+		List<UserFollow> sub = service.Subscribe(followerid, uploaderid);
+		String msg = "";
+		if (sub.size() != 0) {
+			msg = "您已经关注该用户";
+			System.out.println(msg);
+		} else {
+			int ins = service.subinsert(followerid, uploaderid);
+			msg = "关注成功";
+		}
+		session.setAttribute("msg", msg);
+
+		return "uploaderFanList.jsp";
+
+	}
+
+	// 如果是已经关注->取消关注，调用此接口,需要参数:2个
+	@RequestMapping("/subdelete")
+	public String subdel(@RequestParam Integer followerid, @RequestParam Integer uploaderid, Model model,
+			HttpSession session) {
+		int del = service.subdelete(followerid, uploaderid);
+		// sql语句执行之后，返回uploader.jsp时会自动判断（自我认为）
+		model.addAttribute("success", "已取消关注");
+		return "uploader.jsp";
+
+	}
+
+	// 如果是已经关注->取消关注，调用此接口,需要参数:2个
+	@RequestMapping("/subdelete1")
+	public String subdel1(@RequestParam Integer followerid, @RequestParam Integer uploaderid, Model model,
+			HttpSession session) {
+		int del = service.subdelete(followerid, uploaderid);
+		// sql语句执行之后，返回uploader.jsp时会自动判断（自我认为）
+		model.addAttribute("success", "已取消关注");
+		return "uploaderFanList.jsp";
+
+	}
 }

@@ -136,4 +136,9 @@ public class BlogCommentServiceImpl implements BlogCommentService {
 		return wholecmt;
 	}
 
+	@Override
+	public int getupcmtnum(int upid) {
+		return dao.getusercmtnum(upid);
+	}
+
 }

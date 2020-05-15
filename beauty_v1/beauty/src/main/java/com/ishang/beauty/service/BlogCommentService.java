@@ -67,4 +67,9 @@ public interface BlogCommentService {
 	 * 集成所有get cmt&reply的操作
 	 * */
 	public WholeComment getwholecomment(int blogid);
+	
+	/**
+	 * 获取某user的总获评数
+	 * */
+	public int getupcmtnum(int upid);
 }

@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" isELIgnored="false" %>
-    
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<% String path = request.getContextPath();%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,10 +12,10 @@
 
 <table>
 	<c:forEach items="${bloglist}" var="list" varStatus="status">
-		<tr target="sid_user" rel="${list.id}">
+		<tr rel="${list.id}">
+			<td>${list.id}</td>
 			<td>${list.title}</td>
 			<td>${list.userid}</td>
-			<td>${list.content}</td>
 			<td>${list.createtime}</td>
 			<td>
 			<!-- 注意此处的flag是经过后端处理的，
@@ -27,7 +26,12 @@
 		</tr>
 	</c:forEach>
 </table>
+<div id="pagehandle"></div>
 
-
+<script src="<%=path%>/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="<%=path%>/js/ms/loadpageplugin.js"></script>
+<script type="text/javascript">
+loadpagebtn("#pagehandle")
+</script>
 </body>
 </html>

@@ -98,4 +98,24 @@ public class UserServiceImpl implements UserService {
 	public List<UserFollow> FanList(Integer id) {
 		return followdao.selectFanList(id);
 	}
+
+	@Override
+	public List<User> backlogin(User record) {
+		return dao.backlogin(record.getUsername()	, record.getPassword());
+	}
+
+	@Override
+	public List<UserFollow> Subscribe(Integer followerid, Integer uploaderid) {
+		return followdao.subscribe(followerid, uploaderid);
+	}
+
+	@Override
+	public int subinsert(Integer followerid, Integer uploaderid) {
+		return followdao.subinsert(followerid, uploaderid);
+	}
+
+	@Override
+	public int subdelete(Integer followerid, Integer uploaderid) {
+		return followdao.subdelete(followerid, uploaderid);
+	}
 }
