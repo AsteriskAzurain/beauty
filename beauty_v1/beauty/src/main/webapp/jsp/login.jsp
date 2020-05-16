@@ -70,7 +70,7 @@
 	$(function(){
 		var cookiestr=getCookie("user");
 		if(cookiestr!=""){
-			$("#checkboxNum").prop("checked",true);
+			$("#customCheck1").prop("checked",true);
 			cookiestr=cookiestr.substring(0,cookiestr.length-1);
 			var username=cookiestr.split("#")[0];
 			username=decodeURIComponent(username)

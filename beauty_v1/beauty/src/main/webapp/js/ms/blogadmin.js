@@ -40,3 +40,4 @@
 				}
 			blog_addhere.innerHTML=myhtml
 		}
+		

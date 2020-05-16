@@ -47,4 +47,14 @@ public interface BlogCommentMapper {
      * 获取某user的总获评数
      * */
     int getusercmtnum(int upid);
+    
+    /**
+     * 获取某up收到的所有评论
+     * */
+    List<BlogComment> getupcmt(int upid);
+    
+    /**
+     * 模糊查找某up收到的评论
+     * */
+    List<BlogComment> getupcmtlike(BlogComment record);
 }

@@ -104,7 +104,8 @@
 		$(window).on('load', function(){
 			
 			$("#sidebar").find("a").removeClass("active");
-			$("#user-admin a").addClass("active");
+			$("#blog-admin a").addClass("active");
+			$("#blog-up a").addClass("active");
 
 			loadpagebtn("#pagehandle")
 			$("#pagehandle").find("li").addClass("btn")
@@ -164,7 +165,7 @@
 				url: target,
 				type: 'get',
 				dataType:'JSON',
-				data: {'pn': pn, 'upid': 63},
+				data: data,
 				contentType : 'application/json',
 				success:function(response,status,xhr){
 					console.log(response);
@@ -182,7 +183,7 @@
 				}
 			});
 		}
-
+		
 		function afterajax(target) {
 			$("#pagehandle  a").click(function() {
 				//alert("hello")

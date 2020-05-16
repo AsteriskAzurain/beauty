@@ -62,7 +62,7 @@
 	<select id="selectlike" parameterType="com.ishang.beauty.entity.BlogComment" resultMap="BaseResultMap">
 		select id, userid, blogid, cmtid, `comment`, createtime, likenum, del_flag
     	from blog_comment
-		where `comment` like concat('%',#{`comment`,jdbcType=VARCHAR},'%')
+		where (`comment` like concat('%', #{comment,jdbcType=VARCHAR},'%') OR id LIKE concat('%', #{comment,jdbcType=VARCHAR}) )
 		and del_flag=1
 		<![CDATA[ and createtime <= NOW()	]]>
 	</select>
@@ -107,7 +107,23 @@
 	
 	<!-- 获取某user的总获评数 -->
 	<select id="getusercmtnum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		SELECT COUNT(cmts) FROM upblogcmts
-		WHERE upid=#{upid,jdbcType=INTEGER}
+		SELECT SUM(cmts) FROM upblogcmts
+		WHERE upid=#{upid,jdbcType=INTEGER} 
+	</select>
+	
+	<!-- 获取某up收到的所有评论 -->
+	<select id="getupcmt" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT id, userid, blogid, cmtid, `comment`, createtime, likenum, del_flag
+		FROM blog_comment 
+		WHERE blogid in(SELECT blogid FROM upblogcmts WHERE upid=#{userid,jdbcType=INTEGER} )
+	</select>
+	
+	<!-- 模糊查找某up收到的评论 -->
+	<select id="getupcmtlike" parameterType="com.ishang.beauty.entity.BlogComment"  resultMap="BaseResultMap">
+		SELECT  id, userid, blogid, cmtid, `comment`, createtime, likenum, del_flag
+		FROM blog_comment 
+		WHERE blogid in(SELECT blogid FROM upblogcmts WHERE upid=#{userid,jdbcType=INTEGER} ) 
+		AND (`comment` like concat('%', #{comment,jdbcType=VARCHAR} ,'%') 
+			OR id LIKE concat('%', #{comment,jdbcType=VARCHAR} ,'%') )
 	</select>
 </mapper>

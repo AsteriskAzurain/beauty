@@ -21,7 +21,7 @@ if(roleid==1){
 	document.writeln("");
 	document.writeln("</li>");
 	document.writeln("<li id=\'role-admin\' class=\'nav-item \'>");
-	document.writeln("	<a class=\'nav-link\' href=\'#\'>");
+	document.writeln("	<a class=\'nav-link\' href=\'adminrole\'>");
 	document.writeln("		<i class=\'fa fa-fw fa-user-plus\'></i> 角色管理");
 	document.writeln("		<span class=\'badge badge-success\'>6</span>");
 	document.writeln("	</a>");
@@ -30,7 +30,7 @@ if(roleid==1){
 	document.writeln("	Blog");
 	document.writeln("</li>");
 	document.writeln("<li id=\'type-admin\' class=\'nav-item\'>");
-	document.writeln("	<a class=\'nav-link\' href=\'#\'>");
+	document.writeln("	<a class=\'nav-link\' href=\'admintype\'>");
 	document.writeln("		<i class=\'fa fa-fw fa-list-alt\'></i>类别管理");
 	document.writeln("	</a>");
 	document.writeln("</li>");
@@ -40,7 +40,7 @@ if(roleid==1){
 	document.writeln("	</a>");
 	document.writeln("</li>");
 	document.writeln("<li id=\'cmt-admin\' class=\'nav-item\'>");
-	document.writeln("	<a class=\'nav-link\' href=\'#\'>");
+	document.writeln("	<a class=\'nav-link\' href=\'admincomment'>");
 	document.writeln("		<i class=\'fa fa-fw fa-comments\'></i>评论管理");
 	document.writeln("	</a>");
 	document.writeln("</li>");
@@ -60,7 +60,7 @@ if(roleid==1){
 	document.writeln("	</a>");
 	document.writeln("</li>");
 	document.writeln("<li id=\'cmt-up\' class=\'nav-item\'>");
-	document.writeln("	<a class=\'nav-link\' href=\'#\'>");
+	document.writeln("	<a class=\'nav-link\' href=\'upcomment\'>");
 	document.writeln("		<i class=\'fa fa-fw fa-comments\'></i>评论管理");
 	document.writeln("	</a>");
 	document.writeln("</li>");

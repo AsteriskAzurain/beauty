@@ -40,7 +40,7 @@
 									<thead>
 										<tr>
 											<th>id</th>
-											<th width="50%">类别名称</th>	
+											<th width="50%">角色名称</th>	
 											<th>操作</th>
 										</tr>
 									</thead>
@@ -48,7 +48,7 @@
 										<c:forEach items="${rstlist}" var="type">
 											<tr>
 												<th>${type.id }</th>
-												<th>${type.typename }</th>	
+												<th>${type.rolename }</th>	
 												<th> 
 													<div class="inline"> 
 														<button type="button" class="btn btn-sm btn-outline-dark btn-upd mr-3" name="${type.id }">编辑</button>
@@ -90,7 +90,7 @@
 		$(window).on('load', function(){
 			
 			$("#sidebar").find("a").removeClass("active");
-			$("#type-admin a").addClass("active");
+			$("#role-admin a").addClass("active");
 
 			$(".btn-upd").click(function() {
 				var strid=$(this).attr("name");

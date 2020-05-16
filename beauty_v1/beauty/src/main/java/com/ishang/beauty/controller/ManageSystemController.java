@@ -25,11 +25,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ishang.beauty.entity.Blog;
+import com.ishang.beauty.entity.BlogComment;
+import com.ishang.beauty.entity.BlogType;
 import com.ishang.beauty.entity.User;
+import com.ishang.beauty.entity.UserRole;
 import com.ishang.beauty.service.BlogCommentService;
 import com.ishang.beauty.service.BlogService;
 import com.ishang.beauty.service.BlogTypeService;
+import com.ishang.beauty.service.UserRoleService;
 import com.ishang.beauty.service.UserService;
+import com.ishang.beauty.utils.EncodingTool;
+import com.ishang.beauty.utils.Md5Utils;
 
 @Controller    
 @RequestMapping("/back") 
@@ -42,9 +48,11 @@ public class ManageSystemController {
 	private BlogCommentService cmtservice;
 	@Autowired
 	private BlogTypeService typeservice;
+	@Autowired
+	private UserRoleService roleservice;
+	
 	
 	private Integer loginid=0;
-	private Integer loginrole=1;
 	
 	// 页面跳转
 	//------------------------------------------------------
@@ -67,12 +75,29 @@ public class ManageSystemController {
 		return "../ms/ms-user.jsp";
 	}
 	@RequestMapping("/adminblog")
-	public String toblogAdmin(Model model) {
+	public String toblog(Model model) {
 		return "../ms/ms-blog.jsp";
 	}
+	@RequestMapping("/admintype")
+	public String totype(Model model) {
+		return "../back/gettype";
+	}
+	@RequestMapping("/adminrole")
+	public String torole(Model model) {
+		return "../back/getrole";
+	}
+	@RequestMapping("/admincomment")
+	public String tocmt(Model model) {
+		return "../ms/ms-comment.jsp";
+	}
+	
 	@RequestMapping("/upblog")
 	public String toblogUP(Model model) {
 		return "../ms/ms-blog.jsp";
+	}
+	@RequestMapping("/upcomment")
+	public String tocmtUP(Model model) {
+		return "../ms/ms-comment.jsp";
 	}
 	//------------------------------------------------------
 	
@@ -84,9 +109,13 @@ public class ManageSystemController {
 		//System.out.println(stores);
 		Boolean re= true;
 		if(stores==null) re=false;
+		request.setCharacterEncoding("UTF-8");
+		System.out.println("原来："+username);
+		username=EncodingTool.encodeStr(username);
+		System.out.println("处理后："+username);
 		User user = new User();
 		user.setUsername(username);
-		user.setPassword(password);		
+		user.setPassword(Md5Utils.md5(password));		
 		
 		List<User> result = userservice.backlogin(user);
 		if (result.size() > 0 ) {
@@ -97,7 +126,7 @@ public class ManageSystemController {
 			HttpSession session = request.getSession();
 			session.setAttribute("SESSION_UserID", result.get(0).getId());
 			session.setAttribute("SESSION_UserName", result.get(0).getUsername());
-			session.setAttribute("SESSION_PassWord", result.get(0).getPassword());
+			session.setAttribute("SESSION_PassWord", null);
 			String loginname = URLEncoder.encode(result.get(0).getUsername(), String.valueOf(Charsets.UTF_8));
 			loginname=loginname.replaceAll("\\+", "%20");
 			System.out.println(loginname);
@@ -105,13 +134,14 @@ public class ManageSystemController {
 			String loginInfo2 = loginname + "#" +'1'+ "#" + result.get(0).getId();
 			// 如果记住密码设置cookie
 			if (re) {
-				Cookie userCookie = new Cookie("user", loginInfo.toString());
+				session.setAttribute("SESSION_PassWord", result.get(0).getPassword());
+				Cookie userCookie = new Cookie("backuser", loginInfo.toString());
 				// 设置保存7天cookie
 				userCookie.setMaxAge(7 * 24 * 60 * 60);
 				userCookie.setPath("/");
 				response.addCookie(userCookie);
 			} else {// 没有选中记住密码，删除cookie
-				Cookie newCookie = new Cookie("user", loginInfo2.toString());
+				Cookie newCookie = new Cookie("backuser", loginInfo2.toString());
 				newCookie.setMaxAge(7 * 24 * 60 * 60);
 				newCookie.setPath("/");
 				// 覆盖之前的userCookie
@@ -235,6 +265,60 @@ public class ManageSystemController {
 		map.put("typemap", typelist);
 		map.put("starmap", starlist);
 		map.put("cmtmap", cmtlist);
+		return map;
+	}
+	
+	@RequestMapping("/gettype")
+	public String gettype(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		List<BlogType> rstlist = typeservice.findall();
+		model.addAttribute("rstlist", rstlist);
+		return "../ms/ms-type.jsp";
+	}
+	
+	@RequestMapping("/getrole")
+	public String getrole(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		List<UserRole> rstlist = roleservice.findall();
+		model.addAttribute("rstlist", rstlist);
+		return "../ms/ms-role.jsp";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getcmt", method = RequestMethod.POST)    
+    public Map<String, Object> findcmt( @RequestParam Integer pn, @RequestParam(value = "upid", required = false) Integer upid, @RequestParam(value = "keyword", required = false) String keyword ) throws UnsupportedEncodingException{     
+		keyword=URLDecoder.decode(keyword, "UTF-8");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int pagesize=10;
+		PageHelper.startPage(pn, pagesize);
+		
+		List<BlogComment> rstlist=new ArrayList<BlogComment>();
+		BlogComment record= new BlogComment();
+		if(upid!=0) {
+			record.setUserid(upid);
+			if(keyword!="") record.setComment(keyword);
+			rstlist = cmtservice.getuplike(record);
+		}else {
+			rstlist=cmtservice.findall();
+			if(keyword!="") {
+				record.setComment(keyword);
+				rstlist=cmtservice.findbyentity(record);
+			}
+		}
+		PageInfo<BlogComment> page = new PageInfo<BlogComment>(rstlist);
+		System.out.println("page:"+pn+": size="+rstlist.size());
+		map.put("rstmap", rstlist);
+		map.put("pageinfo", page);
+		
+		int n=rstlist.size();
+		if(n>0) {
+			String[] cmter= new String[n];
+			for(int i=0; i<n;i++) {
+				cmter[i]=userservice.findbyid(rstlist.get(i).getUserid()).get(0).getUsername();
+			}
+			map.put("cmtermap",cmter);
+		}		
+
 		return map;
 	}
 }

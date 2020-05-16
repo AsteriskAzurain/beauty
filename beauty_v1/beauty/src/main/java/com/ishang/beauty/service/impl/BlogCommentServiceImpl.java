@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -139,6 +140,20 @@ public class BlogCommentServiceImpl implements BlogCommentService {
 	@Override
 	public int getupcmtnum(int upid) {
 		return dao.getusercmtnum(upid);
+	}
+
+	@Override
+	public List<BlogComment> getuplike(BlogComment record) {
+		return Optional.ofNullable(record.getComment()).map(rst->dao.getupcmtlike(record)).orElse(dao.getupcmt(record.getUserid()));
+//		Optional<String> nullobject = Optional.ofNullable(record.getComment());
+		//return Optional.ofNullable(s).map(sl->sl.name).orElse("is Null");
+//		List<BlogComment> rst = new ArrayList<BlogComment>();
+		//if(record.getComment()!=null || record.getComment()!="") 
+//		if(nullobject.isPresent())
+//			rst = dao.getupcmtlike(record);
+//		else 
+//			rst = dao.getupcmt(record.getUserid());
+//		return rst;
 	}
 
 }

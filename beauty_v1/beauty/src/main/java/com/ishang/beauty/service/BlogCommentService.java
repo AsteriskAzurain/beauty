@@ -72,4 +72,9 @@ public interface BlogCommentService {
 	 * 获取某user的总获评数
 	 * */
 	public int getupcmtnum(int upid);
+	
+	/**
+     * 模糊查找某up收到的评论
+     * */
+    List<BlogComment> getuplike(BlogComment record);
 }
