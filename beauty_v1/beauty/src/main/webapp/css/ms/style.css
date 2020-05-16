@@ -2118,7 +2118,7 @@ Pageheader
 }
 
 .influencer-profile-data .user-avatar-name {
-    float: left;
+    /* float: left; */
     padding-right: 20px;
 }
 

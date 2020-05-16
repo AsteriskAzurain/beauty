@@ -3,6 +3,7 @@ package com.ishang.beauty.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ishang.beauty.entity.Blog;
 import com.ishang.beauty.entity.User;
 import com.ishang.beauty.service.BlogCommentService;
@@ -40,12 +43,41 @@ public class ManageSystemController {
 	@Autowired
 	private BlogTypeService typeservice;
 	
+	private Integer loginid=0;
+	private Integer loginrole=1;
+	
+	// 页面跳转
+	//------------------------------------------------------
+	@RequestMapping("/login")
+	public String tologin(Model model) {
+		return "../ms/login.jsp";
+	}
+	
 	@RequestMapping("/index")
 	public String toindex(Model model) {
+		if(loginid>0) {
+			User user = userservice.selectbyid(loginid).get(0);
+			model.addAttribute("loginuser", user);
+		}
 		return "../ms/index.jsp";
 	}
 	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping("/adminuser")
+	public String touser(Model model) {
+		return "../ms/ms-user.jsp";
+	}
+	@RequestMapping("/adminblog")
+	public String toblogAdmin(Model model) {
+		return "../ms/ms-blog.jsp";
+	}
+	@RequestMapping("/upblog")
+	public String toblogUP(Model model) {
+		return "../ms/ms-blog.jsp";
+	}
+	//------------------------------------------------------
+	
+	// 业务处理
+	@RequestMapping(value = "/loginaction", method = RequestMethod.POST)
 	public String backlogin(@RequestParam("username") String username,@RequestParam("password") String password,
 			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		String stores[] = request.getParameterValues("reb");
@@ -58,14 +90,18 @@ public class ManageSystemController {
 		
 		List<User> result = userservice.backlogin(user);
 		if (result.size() > 0 ) {
+			// set global variable loginid
+			loginid=result.get(0).getId();
+			
 			// 设置session
 			HttpSession session = request.getSession();
+			session.setAttribute("SESSION_UserID", result.get(0).getId());
 			session.setAttribute("SESSION_UserName", result.get(0).getUsername());
 			session.setAttribute("SESSION_PassWord", result.get(0).getPassword());
 			String loginname = URLEncoder.encode(result.get(0).getUsername(), String.valueOf(Charsets.UTF_8));
 			loginname=loginname.replaceAll("\\+", "%20");
 			System.out.println(loginname);
-			String loginInfo = loginname + "#" + result.get(0).getPassword() + "#" + result.get(0).getId();
+			String loginInfo = loginname + "#" + password + "#" + result.get(0).getId();
 			String loginInfo2 = loginname + "#" +'1'+ "#" + result.get(0).getId();
 			// 如果记住密码设置cookie
 			if (re) {
@@ -94,14 +130,54 @@ public class ManageSystemController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/getall", method = RequestMethod.GET)    
+    public Map<String, Object> findall(@RequestParam(value = "pn", defaultValue = "1") String strpn){    
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int pagesize=10;
+		int pn = Integer.parseInt(strpn);
+		// 在查询前设置limit
+		PageHelper.startPage(pn, pagesize);
+		List<Blog> rstlist=blogservice.findall();				
+		PageInfo<Blog> page = new PageInfo<Blog>(rstlist);
+		System.out.println("page:"+pn+": size="+rstlist.size());
+		map.put("rstmap", rstlist);
+		map.put("pageinfo", page);
+		
+		String[] typelist = 	new String[pagesize];
+		int[] starlist = new int[pagesize];
+		int[] cmtlist = new int[pagesize];
+		
+		for(int i=0; i<rstlist.size(); i++) {
+			int id=rstlist.get(i).getId();
+			typelist[i]=typeservice.findbyid(rstlist.get(i).getTypeid()).getTypename();
+			starlist[i]=blogservice.getnum(id, "star");
+			cmtlist[i]=blogservice.getnum(id, "cmt");
+		}
+		
+		map.put("typemap", typelist);
+		map.put("starmap", starlist);
+		map.put("cmtmap", cmtlist);
+		return map;
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public Map<String, Object> backsearch(@RequestParam("keyword") String keyword,HttpServletRequest request) throws UnsupportedEncodingException {
+	public Map<String, Object> backsearch(@RequestParam String keyword, @RequestParam Integer upid,
+			HttpServletRequest request) throws UnsupportedEncodingException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		keyword=URLDecoder.decode(keyword, "UTF-8");
 		System.out.println(keyword);
 		Blog record = new Blog();
+		record.setUserid(upid);
 		record.setTitle(keyword);
-		List<Blog> rstlist=blogservice.findbyentity(record);
+		List<Blog> rstlist= new ArrayList<Blog>();
+		if(upid==1) rstlist=blogservice.findbyentity(record);
+		else {
+			record.setUserid(upid);
+			rstlist=blogservice.findbyentity(record);
+		}
 		
 		if(rstlist.size()>0) {
 			int n=rstlist.size();
@@ -126,4 +202,39 @@ public class ManageSystemController {
 		return map;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/getbyid", method = RequestMethod.GET)    
+    public Map<String, Object> findbyid( @RequestParam Integer pn, @RequestParam Integer upid){    
+			//@RequestParam(value = "pn", defaultValue = "1") String strpn, 
+    		//@RequestParam("upid") String str_up){    
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int pagesize=10;
+		//int pn = Integer.parseInt(strpn);
+		//int upid=Integer.parseInt(str_up);
+		// 在查询前设置limit
+		PageHelper.startPage(pn, pagesize);
+		List<Blog> rstlist = blogservice.findbyentity(upid, "time", true);
+		PageInfo<Blog> page = new PageInfo<Blog>(rstlist);
+		System.out.println("page:"+pn+": size="+rstlist.size());
+		map.put("rstmap", rstlist);
+		map.put("pageinfo", page);
+		
+		String[] typelist = 	new String[pagesize];
+		int[] starlist = new int[pagesize];
+		int[] cmtlist = new int[pagesize];
+		
+		for(int i=0; i<rstlist.size(); i++) {
+			int id=rstlist.get(i).getId();
+			typelist[i]=typeservice.findbyid(rstlist.get(i).getTypeid()).getTypename();
+			starlist[i]=blogservice.getnum(id, "star");
+			cmtlist[i]=blogservice.getnum(id, "cmt");
+		}
+		
+		map.put("typemap", typelist);
+		map.put("starmap", starlist);
+		map.put("cmtmap", cmtlist);
+		return map;
+	}
 }

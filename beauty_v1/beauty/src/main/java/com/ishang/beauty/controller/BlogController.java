@@ -45,39 +45,6 @@ public class BlogController {
 	@Autowired
 	private BlogTypeService typeservice;
 	
-	@ResponseBody
-	@RequestMapping(value = "/blog/getall", method = RequestMethod.GET)    
-    public Map<String, Object> findall(@RequestParam(value = "pn", defaultValue = "1") String strpn){    
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		int pagesize=10;
-		int pn = Integer.parseInt(strpn);
-		// 在查询前设置limit
-		PageHelper.startPage(pn, pagesize);
-		List<Blog> rstlist=service.findall();				
-		PageInfo<Blog> page = new PageInfo<Blog>(rstlist);
-		System.out.println("page:"+pn+": size="+rstlist.size());
-		map.put("rstmap", rstlist);
-		map.put("pageinfo", page);
-		
-		String[] typelist = 	new String[pagesize];
-		int[] starlist = new int[pagesize];
-		int[] cmtlist = new int[pagesize];
-		
-		for(int i=0; i<rstlist.size(); i++) {
-			int id=rstlist.get(i).getId();
-			typelist[i]=typeservice.findbyid(rstlist.get(i).getTypeid()).getTypename();
-			starlist[i]=service.getnum(id, "star");
-			cmtlist[i]=service.getnum(id, "cmt");
-		}
-		
-		map.put("typemap", typelist);
-		map.put("starmap", starlist);
-		map.put("cmtmap", cmtlist);
-		return map;
-	}
-	
 	@RequestMapping("/blog/getrec")    
     public String findrec(HttpServletRequest request,Model model){    
 		List<Blog> rstlist=service.findbyentity(3, "rec", true);

@@ -2,6 +2,8 @@ package com.ishang.beauty.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ishang.beauty.entity.Blog;
 import com.ishang.beauty.entity.User;
 
@@ -44,5 +46,7 @@ public interface BlogMapper {
      * */
     List<Blog> selectlatestblog(int followerid);
     
+    /***/
+    List<Blog> selectuplike(@Param("upid")int upid, @Param("keyword")String keyword);
     
 }

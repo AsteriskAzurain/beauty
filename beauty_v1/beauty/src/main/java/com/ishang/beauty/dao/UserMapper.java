@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
 	int deleteByPrimaryKey(Integer id);
+	int deleteByID(Integer id);
 
 	int insert(User record);
 

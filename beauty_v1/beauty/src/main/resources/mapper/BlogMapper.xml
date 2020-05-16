@@ -91,6 +91,16 @@
 		and del_flag=1
 			<![CDATA[ and createtime <= NOW()	]]>
 	</select>
+	
+	<!-- 模糊查找某up的blog -->
+	<select id="selectuplike" resultMap="BaseResultMap">
+		select id, title, userid, typeid, content, createtime, modifytime,
+		rec_flag, pic1, pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
+		from blog
+		where userid=#{upid}
+		and title like concat('%',#{keyword},'%')
+		and del_flag=1
+	</select>
 
 	<!-- 查找推荐列表 -->
 	<select id="selectrec" resultMap="BaseResultMap">

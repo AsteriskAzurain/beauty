@@ -40,7 +40,7 @@
 				<span class="splash-description">欢迎登录后台管理系统</span>
 			</div>
             <div class="card-body">
-                <form action="<%=path %>/back/login" method="post">
+                <form action="<%=path %>/back/loginaction" method="post">
                     <div class="form-group">
                         <input class="form-control form-control-lg" id="username" name="username" type="text" placeholder="请输入用户名" autocomplete="off">
                     </div>

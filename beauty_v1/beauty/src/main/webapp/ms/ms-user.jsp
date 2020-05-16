@@ -18,29 +18,19 @@
 
 </head>
 <body>
-  <!-- ============================================================== -->
+
     <!-- main wrapper -->
-    <!-- ============================================================== -->
     <div class="dashboard-main-wrapper">
 
-        <!-- ============================================================== -->
         <!-- left sidebar -->
-        <!-- ============================================================== -->
-        <% 
-			String role=request.getAttribute("role").toString();
-			int roleid=3;
-			if(role.equals("admin")) roleid=1;
-		%>
-		<script type="text/javascript">
-			var roleid =<%=roleid %>
+       <script type="text/javascript">
+			//var roleid = ${roleid}
+			var roleid=<%=session.getAttribute("roleid")%>
 		</script>
 		<script type="text/javascript" src="<%=path %>/js/ms/sidebar.js"></script>
-        <!-- ============================================================== -->
         <!-- end left sidebar -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
+
         <!-- wrapper  -->
-        <!-- ============================================================== -->
         <div class="dashboard-wrapper">
             <div class="container-fluid dashboard-content">
 
@@ -52,23 +42,17 @@
                     </div>
                 </div>
             </div>
-            <!-- ============================================================== -->
+
             <!-- footer -->
-            <!-- ============================================================== -->
             <div class="footer text-center ">
                 Copyright &copy; 2020. reachableBeauty All rights reserved.
             </div>
-            <!-- ============================================================== -->
             <!-- end footer -->
-            <!-- ============================================================== -->
         </div>
-        <!-- ============================================================== -->
         <!-- end main wrapper -->
-        <!-- ============================================================== -->
     </div>
-    <!-- ============================================================== -->
     <!-- end main wrapper -->
-    <!-- ============================================================== -->
+
     <!-- Optional JavaScript -->
     <!-- <script src=" ../assets/vendor/jquery/jquery-3.3.1.min.js "></script>
     <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js "></script>

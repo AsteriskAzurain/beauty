@@ -59,7 +59,10 @@ public class BlogServiceImpl implements BlogService {
 
 	@Override
 	public List<Blog> findbyentity(Blog record) {
-		return dao.selectlike(record);
+		List<Blog> rst = new ArrayList<Blog>();
+		if(record.getUserid()>0) rst=dao.selectuplike(record.getUserid(), record.getTitle());
+		else rst=dao.selectlike(record);
+		return rst;
 	}
 
 	@Override
