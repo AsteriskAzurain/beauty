@@ -91,4 +91,21 @@ public interface BlogService {
      * 获取关注up主一周内更新的blog
      * */
     List<Blog> selectlatestblog(int followerid);
+    
+    /**
+     * 获取全部blog
+     * 包括被删除的
+     * */
+    List<Blog> findrealall();
+    
+    /**
+     * 恢复记录
+     * */
+    int undodelete(Blog record);
+    
+    /**
+     * 获取某up的全部blog
+     * 包括被删除的
+     * */
+	List<Blog> findupreal(int userid);
 }

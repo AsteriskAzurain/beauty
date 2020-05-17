@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -169,7 +170,7 @@ public class ManageSystemController {
 		int pn = Integer.parseInt(strpn);
 		// 在查询前设置limit
 		PageHelper.startPage(pn, pagesize);
-		List<Blog> rstlist=blogservice.findall();				
+		List<Blog> rstlist=blogservice.findrealall();				
 		PageInfo<Blog> page = new PageInfo<Blog>(rstlist);
 		System.out.println("page:"+pn+": size="+rstlist.size());
 		map.put("rstmap", rstlist);
@@ -245,7 +246,7 @@ public class ManageSystemController {
 		//int upid=Integer.parseInt(str_up);
 		// 在查询前设置limit
 		PageHelper.startPage(pn, pagesize);
-		List<Blog> rstlist = blogservice.findbyentity(upid, "time", true);
+		List<Blog> rstlist = blogservice.findupreal(upid);
 		PageInfo<Blog> page = new PageInfo<Blog>(rstlist);
 		System.out.println("page:"+pn+": size="+rstlist.size());
 		map.put("rstmap", rstlist);
@@ -272,6 +273,8 @@ public class ManageSystemController {
 	public String gettype(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
 		List<BlogType> rstlist = typeservice.findall();
 		model.addAttribute("rstlist", rstlist);
+		List<BlogType> reslist = typeservice.findres();
+		model.addAttribute("reslist", reslist);
 		return "../ms/ms-type.jsp";
 	}
 	
@@ -279,6 +282,8 @@ public class ManageSystemController {
 	public String getrole(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
 		List<UserRole> rstlist = roleservice.findall();
 		model.addAttribute("rstlist", rstlist);
+		List<UserRole> reslist = roleservice.findres();
+		model.addAttribute("reslist", reslist);
 		return "../ms/ms-role.jsp";
 	}
 	
@@ -299,7 +304,7 @@ public class ManageSystemController {
 			if(keyword!="") record.setComment(keyword);
 			rstlist = cmtservice.getuplike(record);
 		}else {
-			rstlist=cmtservice.findall();
+			rstlist=cmtservice.getrealall();
 			if(keyword!="") {
 				record.setComment(keyword);
 				rstlist=cmtservice.findbyentity(record);
@@ -320,5 +325,116 @@ public class ManageSystemController {
 		}		
 
 		return map;
+	}
+	
+	@RequestMapping(value = "/deleterole" , method = RequestMethod.GET)
+	public String delrole(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		String strrole= (String) request.getParameter("roleid");
+		int roleid=Integer.parseInt(strrole);
+		UserRole record = roleservice.findbyid(roleid);
+		if(roleservice.deleteone(record)>0) request.setAttribute("msg", "删除成功");
+		else request.setAttribute("msg", "添加失败");
+		return "../back/adminrole";
+	}
+	
+	@RequestMapping(value = "/deletetype" , method = RequestMethod.GET)
+	public String deltype(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		String strtype= (String) request.getParameter("typeid");
+		int typeid=Integer.parseInt(strtype);
+		BlogType record = typeservice.findbyid(typeid);
+		if(typeservice.deleteone(record)>0) request.setAttribute("msg", "删除成功");
+		else request.setAttribute("msg", "添加失败");
+		return "../back/admintype";
+	}
+	
+	@RequestMapping(value = "/addtype",  method = RequestMethod.POST)
+	public String addtype(HttpServletRequest request, HttpServletResponse response ,Model model, @RequestParam(required = false) String typename) {
+		Optional<String> nullobject = Optional.ofNullable(typename);
+		if(nullobject.isPresent()) {
+			BlogType record = new BlogType();
+			record.setTypename(typename);
+			record.setDelFlag(true);
+			if(typeservice.addone(record)>0) request.setAttribute("msg", "添加成功");
+			else request.setAttribute("msg", "添加失败");
+		}else 
+			request.setAttribute("msg", "添加失败");
+		return "../back/admintype";
+	}
+	
+	@RequestMapping(value = "/addrole",  method = RequestMethod.POST)
+	public String addrole(HttpServletRequest request, HttpServletResponse response ,Model model, @RequestParam(required = false) String rolename) {
+		Optional<String> nullobject = Optional.ofNullable(rolename);
+		if(nullobject.isPresent()) {
+			UserRole record = new UserRole();
+			record.setRolename(rolename);
+			record.setDelFlag(true);
+			if(roleservice.addone(record)>0) request.setAttribute("msg", "添加成功");
+			else request.setAttribute("msg", "添加失败");
+		}else 
+			request.setAttribute("msg", "添加失败");
+		return "../back/adminrole";
+	}
+	
+	@RequestMapping(value = "/undodeltype" , method = RequestMethod.GET)
+	public String undodeltype(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		String strtype= (String) request.getParameter("typeid");
+		int typeid=Integer.parseInt(strtype);
+		BlogType record = typeservice.findbyid(typeid);
+		if(typeservice.undodelete(record)>0) request.setAttribute("msg", "恢复成功");
+		else request.setAttribute("msg", "恢复失败");
+		return "../back/admintype";
+	}
+	
+	@RequestMapping(value = "/undodelrole" , method = RequestMethod.GET)
+	public String undodelrole(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		String strrole= (String) request.getParameter("roleid");
+		int roleid=Integer.parseInt(strrole);
+		UserRole record = roleservice.findbyid(roleid);
+		if(roleservice.undodelone(record)>0) request.setAttribute("msg", "恢复成功");
+		else request.setAttribute("msg", "恢复失败");
+		return "../back/adminrole";
+	}
+	
+	@RequestMapping(value = "/deleteblog" , method = RequestMethod.GET)
+	public String delblog(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+//		String uri=request.getRequestURI();
+//		System.out.println(uri);
+		String strid= (String) request.getParameter("blogid");
+		int blogid=Integer.parseInt(strid);
+		Blog record = blogservice.findbyid(blogid);
+		if(blogservice.deleteone(record)>0) request.setAttribute("msg", "删除成功");
+		else request.setAttribute("msg", "删除失败");
+		return "../ms/ms-blog.jsp";
+	}
+	
+	@RequestMapping(value = "/undodelblog" , method = RequestMethod.GET)
+	public String undodelblog(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		String strid= (String) request.getParameter("blogid");
+		int blogid=Integer.parseInt(strid);
+		Blog record = blogservice.findbyid(blogid);
+		if(blogservice.undodelete(record)>0) request.setAttribute("msg", "恢复成功");
+		else request.setAttribute("msg", "恢复失败");
+		return "../ms/ms-blog.jsp";
+	}
+	@RequestMapping(value = "/deletecmt" , method = RequestMethod.GET)
+	public String delcmt(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+//		String uri=request.getRequestURI();
+//		System.out.println(uri);
+		String strid= (String) request.getParameter("id");
+		int id=Integer.parseInt(strid);
+		BlogComment record = cmtservice.findbyid(id);
+		if(cmtservice.deleteone(record)>0) request.setAttribute("msg", "删除成功");
+		else request.setAttribute("msg", "删除失败");
+		return "../ms/ms-comment.jsp";
+	}
+	
+	@RequestMapping(value = "/undodelcmt" , method = RequestMethod.GET)
+	public String undodelcmt(HttpServletRequest request,Model model) throws UnsupportedEncodingException{    
+		String strid= (String) request.getParameter("id");
+		int id=Integer.parseInt(strid);
+		BlogComment record = cmtservice.findbyid(id);
+		if(cmtservice.undodel(record)>0) request.setAttribute("msg", "恢复成功");
+		else request.setAttribute("msg", "恢复失败");
+		return "../ms/ms-comment.jsp";
 	}
 }

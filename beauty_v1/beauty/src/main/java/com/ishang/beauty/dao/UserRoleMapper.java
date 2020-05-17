@@ -13,4 +13,6 @@ public interface UserRoleMapper {
     List<UserRole> selectAll();
 
     int updateByPrimaryKey(UserRole record);
+
+	List<UserRole> selectres();
 }

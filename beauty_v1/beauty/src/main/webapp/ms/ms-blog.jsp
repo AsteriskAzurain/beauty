@@ -141,6 +141,9 @@
 				});
 			});
 			
+			var msg="<%=request.getAttribute("msg")%>"
+			if(msg!=null && msg!='null' && msg!='') alert(msg)
+			
 		});
 				
 		function gettable(pn) {
@@ -172,10 +175,9 @@
 					console.log(status);
 					console.log(xhr);
 					writetable(response);
-					if(pn == 1){
-						console.info(response);
-						pageload(gettable,response,1);
-					}
+					var cpn=response.pageinfo.pageNum
+					pageload(gettable,response,cpn);
+					addcpn(cpn);
 					afterajax(target);
 				},
 				error:function(){
@@ -201,12 +203,21 @@
 			$(".btn-del").click(function() {
 				var strid=$(this).attr("name");
 				if (confirm("确认要删除吗？")) {
-				    alert("已删除");
-				    location.reload();
+				    window.location.href="<%=path%>/back/deleteblog?blogid="+strid
 				  } else {
 				    alert("已取消");
 				  }
 			});
+			
+			$(".btn-res").click(function() {
+				var strid=$(this).attr("name");
+				if (confirm("确认要恢复吗？")) {
+				    window.location.href="<%=path%>/back/undodelblog?blogid="+strid
+				  } else {
+				    alert("已取消");
+				  }
+			});
+			
 		}
 	</script>
 

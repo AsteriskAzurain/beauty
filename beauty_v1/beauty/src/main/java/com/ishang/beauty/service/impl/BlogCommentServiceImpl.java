@@ -144,7 +144,7 @@ public class BlogCommentServiceImpl implements BlogCommentService {
 
 	@Override
 	public List<BlogComment> getuplike(BlogComment record) {
-		return Optional.ofNullable(record.getComment()).map(rst->dao.getupcmtlike(record)).orElse(dao.getupcmt(record.getUserid()));
+		return Optional.ofNullable(record.getComment()).map(rst->dao.getupcmtlike(record)).orElse(getupreal(record.getUserid()));
 //		Optional<String> nullobject = Optional.ofNullable(record.getComment());
 		//return Optional.ofNullable(s).map(sl->sl.name).orElse("is Null");
 //		List<BlogComment> rst = new ArrayList<BlogComment>();
@@ -154,6 +154,22 @@ public class BlogCommentServiceImpl implements BlogCommentService {
 //		else 
 //			rst = dao.getupcmt(record.getUserid());
 //		return rst;
+	}
+
+	@Override
+	public List<BlogComment> getrealall() {
+		return dao.selectrealall();
+	}
+
+	@Override
+	public List<BlogComment> getupreal(int userid) {
+		return dao.selectupreal(userid);
+	}
+
+	@Override
+	public int undodel(BlogComment record) {
+		record.setDelFlag(true);
+		return updateone(record);
 	}
 
 }

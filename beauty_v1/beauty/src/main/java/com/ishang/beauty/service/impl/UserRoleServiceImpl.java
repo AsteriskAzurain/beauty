@@ -37,4 +37,20 @@ public class UserRoleServiceImpl implements UserRoleService {
 		return dao.updateByPrimaryKey(record);
 	}
 
+	@Override
+	public UserRole findbyid(int roleid) {
+		return dao.selectByPrimaryKey(roleid);
+	}
+
+	@Override
+	public List<UserRole> findres() {
+		return dao.selectres();
+	}
+
+	@Override
+	public int undodelone(UserRole record) {
+		record.setDelFlag(true);
+		return updateone(record);
+	}
+
 }

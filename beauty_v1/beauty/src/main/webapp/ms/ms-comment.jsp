@@ -138,10 +138,16 @@
 							+ '<th>' + cmtid + '</th>'
 							+ '<th>' + n_like + '</th>'
 							+ '<th>' + cdate + '</th>'
-							+ '<th> <div class="inline"> ' 
-							+'<button type="button" class="btn btn-sm btn-outline-danger btn-del" name="' + id + '">删除</button>'
-							+' </div> </th>'
-							+ '</tr>' )
+							+ '<th> <div class="inline"> '  )
+					if( data.rstmap[i].delFlag==false){
+						myhtml+=(
+								'<button type="button" class="btn btn-sm btn-outline-success btn-res" name="' + id + '">恢复</button>'		
+						)
+					}else{
+						myhtml+=(
+								'<button type="button" class="btn btn-sm btn-outline-danger btn-del" name="' + id + '">删除</button>'
+					)}
+					myhtml+=( ' </div> </th></tr>' )
 				}
 			cmt_addhere.innerHTML=myhtml
 		}
@@ -169,12 +175,9 @@
 					console.log(status);
 					console.log(xhr);
 					writetable(response);
-					if(pn == 1){
-						$("#pagehandle").empty();
-						loadpagebtn("#pagehandle")
-						$("#pagehandle").find("li").addClass("btn")
-						pageload(gettable,response,1);
-					}
+					var cpn=response.pageinfo.pageNum
+					pageload(gettable,response,cpn);
+					addcpn(cpn);
 					afterajax(kw);
 				},
 				error:function(){
@@ -192,13 +195,22 @@
 			$(".btn-del").click(function() {
 				var strid=$(this).attr("name");
 				if (confirm("确认要删除吗？")) {
-				    alert("已删除");
-				    location.reload();
+				    window.location.href="<%=path%>/back/deletecmt?id="+strid
+				  } else {
+				    alert("已取消");
+				  }
+			});
+			
+			$(".btn-res").click(function() {
+				var strid=$(this).attr("name");
+				if (confirm("确认要恢复吗？")) {
+				    window.location.href="<%=path%>/back/undodelcmt?id="+strid
 				  } else {
 				    alert("已取消");
 				  }
 			});
 		}
+		
 	</script>
 </body>
 </html>

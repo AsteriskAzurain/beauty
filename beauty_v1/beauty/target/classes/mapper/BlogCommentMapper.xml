@@ -126,4 +126,22 @@
 		AND (`comment` like concat('%', #{comment,jdbcType=VARCHAR} ,'%') 
 			OR id LIKE concat('%', #{comment,jdbcType=VARCHAR} ,'%') )
 	</select>
+	
+	<!-- 获取全部comment包括被删除的 -->
+  	<select id="selectrealall" resultMap="BaseResultMap">
+	    select id, userid, blogid, cmtid, `comment`, createtime, likenum, del_flag
+	    from blog_comment
+	    where    <![CDATA[  createtime <= NOW()	]]>
+	    ORDER BY createtime DESC
+  </select>
+  
+ 	<!-- 获取某up的全部comment包括被删除的 -->
+ 	<select id="selectupreal" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	    select id, userid, blogid, cmtid, `comment`, createtime, likenum, del_flag
+	    from blog_comment
+	    where blogid in(SELECT id FROM blog WHERE userid =#{userid,jdbcType=INTEGER} )
+			<![CDATA[ and createtime <= NOW()	]]>
+		ORDER BY createtime DESC
+  </select>
+  
 </mapper>

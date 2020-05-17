@@ -7089,8 +7089,14 @@ Media Query
     border: solid 0.5px grey;
     padding: 5px 15px;
 }
-/*
-border: solid 0.5px grey;
-    padding: 5px 15px;
-*/
 
+#pagehandle li.active a {
+    color: red;
+    font-weight: bold;
+}
+
+.restoremodel{
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

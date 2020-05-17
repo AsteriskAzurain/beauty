@@ -46,7 +46,21 @@ public interface BlogMapper {
      * */
     List<Blog> selectlatestblog(int followerid);
     
-    /***/
+    /**
+     * 模糊查找某up的blog
+     * */
     List<Blog> selectuplike(@Param("upid")int upid, @Param("keyword")String keyword);
+
+    /**
+     * 获取全部blog
+     * 包括被删除的
+     * */
+	List<Blog> selectrealall();
+	
+	 /**
+     * 获取某up的全部blog
+     * 包括被删除的
+     * */
+	List<Blog> selectupreal(int userid);
     
 }

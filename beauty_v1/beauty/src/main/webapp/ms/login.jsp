@@ -82,6 +82,7 @@
 				cookiestr=cookiestr.substring(0,cookiestr.length-1);
 				var username=cookiestr.split("#")[0];
 				var password=cookiestr.split("#")[1];
+				username=decodeURIComponent(username)
 				$("#username").val(username);
 				if(password!="1") {
 					$("#password").val(password);

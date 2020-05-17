@@ -153,4 +153,20 @@ public class BlogServiceImpl implements BlogService {
 		return stardao.selectbyentity(record);
 	}
 
+	@Override
+	public List<Blog> findrealall() {
+		return dao.selectrealall();
+	}
+
+	@Override
+	public int undodelete(Blog record) {
+		record.setDelFlag(true);
+		return updateone(record);
+	}
+
+	@Override
+	public List<Blog> findupreal(int userid) {
+		return dao.selectupreal(userid);
+	}
+
 }

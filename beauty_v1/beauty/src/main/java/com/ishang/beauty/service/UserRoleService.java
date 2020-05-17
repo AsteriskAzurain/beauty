@@ -17,4 +17,10 @@ public interface UserRoleService {
 	int deleteone(UserRole record);
 	
 	int updateone(UserRole record);
+
+	UserRole findbyid(int roleid);
+
+	List<UserRole> findres();
+	
+	int undodelone(UserRole record);
 }
