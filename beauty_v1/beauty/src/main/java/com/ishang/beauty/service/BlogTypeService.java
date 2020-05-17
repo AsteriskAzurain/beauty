@@ -26,6 +26,11 @@ public interface BlogTypeService {
 	int deleteone(BlogType record);
 	
 	/**
+	 * 恢复被删除的记录
+	 * */
+	int undodelete(BlogType record);
+	
+	/**
 	 * 修改
 	 * */
 	int updateone(BlogType record);
@@ -40,4 +45,8 @@ public interface BlogTypeService {
 	 * */
 	BlogType findbyid(int id);
 	
+	/**
+	 * 查找被删除的记录
+	 * */
+	List<BlogType> findres();
 }

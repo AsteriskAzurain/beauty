@@ -26,6 +26,11 @@ public interface BlogCommentService {
 	int deleteone(BlogComment record);
 	
 	/**
+	 * 恢复一条数据
+	 * */
+	int undodel(BlogComment record);
+	
+	/**
 	 * 修改评论
 	 * 没有修改功能
 	 * */
@@ -72,4 +77,21 @@ public interface BlogCommentService {
 	 * 获取某user的总获评数
 	 * */
 	public int getupcmtnum(int upid);
+	
+	/**
+     * 模糊查找某up收到的评论
+     * */
+    List<BlogComment> getuplike(BlogComment record);
+    
+    /**
+     * 获取全部comment
+     * 包括被删除的
+     * */
+	List<BlogComment> getrealall();
+	
+	 /**
+     * 获取某up的全部comment
+     * 包括被删除的
+     * */
+	List<BlogComment> getupreal(int userid);
 }

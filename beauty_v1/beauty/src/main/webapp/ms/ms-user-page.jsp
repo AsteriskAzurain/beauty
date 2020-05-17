@@ -240,7 +240,6 @@
 				<col style="width:10%;">
 				<col style="width:5%;">
 				<col style="width:5%;">
-				<col style="width:5%;">
 				<col style="width:10%;">
 				<col style="width:5%;">
 				<col style="width:20%;">
@@ -250,7 +249,6 @@
 					<tr>
 						<th>id</th>
 						<th>username</th>
-						<th>password</th>
 						<th>roleid</th>
 						<th>sex</th>
 						<th>birthday</th>
@@ -264,8 +262,11 @@
 					<tr>
 						<td>${user.id}</td>
 						<td>${user.username}</td>
-						<td>${user.password}</td>
-						<td>${user.roleid}</td>
+						<td>
+						<c:if test="${user.roleid eq '1'}">管理员</c:if>
+						<c:if test="${user.roleid eq 2}">用户</c:if>
+						<c:if test="${user.roleid eq 3}">创作者</c:if>
+						</td>
 						<td>${user.sex==1?"男":"女"}</td>
 						<td><fmt:formatDate value="${user.birthday}" pattern="yyyy-MM-dd"/></td>
 						<td>${user.school}</td>

@@ -70,7 +70,12 @@ function pageload(func,data,curpage){
 	var pagenumtemp="";
 	var $numobj=$('#numpage');
 	$numobj.empty();
-	if(pagenumarr.length>5){
+	// 如果页码arr很短 就全部显示
+	$.each(pagenumarr,function(i,e){
+		pagenumtemp+="<li><a href='#' name='"+e+"'>"+e+"</a></li>";
+	});
+	$numobj.append(pagenumtemp);
+	/*if(pagenumarr.length>5){
 		// 如果页面arr很长 就~~前面一半显示5个~~跳过第5个???
 		$.each(pagenumarr,function(i,e){
 			pagenumtemp+="<li><a href='#' name='"+e+"' >"+e+"</a></li>";
@@ -85,7 +90,7 @@ function pageload(func,data,curpage){
 			pagenumtemp+="<li><a href='#' name='"+e+"'>"+e+"</a></li>";
 		});
 		$numobj.append(pagenumtemp);
-	}
+	}*/
 
 }
 /*

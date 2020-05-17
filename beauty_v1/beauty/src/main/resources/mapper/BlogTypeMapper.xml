@@ -26,25 +26,33 @@
 		set 
 			typename = #{typename,jdbcType=VARCHAR},
 			del_flag = #{delFlag,jdbcType=BIT}
-			where id = #{id,jdbcType=INTEGER}
+			where id = #{id,jdbcType=INTEGER} 
 	</update>
 	
 	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select id, typename, del_flag
 		from blog_type
-		where id = #{id,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER} 
 	</select>
 	
 	<select id="selectAll" resultMap="BaseResultMap">
 		select id, typename, del_flag
 		from blog_type
+		where del_flag=1
 	</select>
 
 	<!-- 糢糊查找 -->
 	<select id="selectlike" parameterType="com.ishang.beauty.entity.BlogType" resultMap="BaseResultMap">
 		select id, typename, del_flag
 		from blog_type
-		where typename like concat('%',#{typename,jdbcType=VARCHAR},'%')
+		where typename like concat('%',#{typename,jdbcType=VARCHAR},'%') and del_flag=1
+	</select>
+	
+	<!-- 查找被删除的记录 -->
+	<select id="selectres" resultMap="BaseResultMap">
+		select id, typename, del_flag
+		from blog_type
+		where del_flag=0
 	</select>
 
 </mapper>

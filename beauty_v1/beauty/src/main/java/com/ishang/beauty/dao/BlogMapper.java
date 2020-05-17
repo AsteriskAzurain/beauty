@@ -2,6 +2,8 @@ package com.ishang.beauty.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ishang.beauty.entity.Blog;
 import com.ishang.beauty.entity.User;
 
@@ -44,5 +46,21 @@ public interface BlogMapper {
      * */
     List<Blog> selectlatestblog(int followerid);
     
+    /**
+     * 模糊查找某up的blog
+     * */
+    List<Blog> selectuplike(@Param("upid")int upid, @Param("keyword")String keyword);
+
+    /**
+     * 获取全部blog
+     * 包括被删除的
+     * */
+	List<Blog> selectrealall();
+	
+	 /**
+     * 获取某up的全部blog
+     * 包括被删除的
+     * */
+	List<Blog> selectupreal(int userid);
     
 }

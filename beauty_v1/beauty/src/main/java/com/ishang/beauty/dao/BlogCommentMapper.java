@@ -47,4 +47,26 @@ public interface BlogCommentMapper {
      * 获取某user的总获评数
      * */
     int getusercmtnum(int upid);
+    
+    /**
+     * 获取某up收到的所有评论
+     * */
+    List<BlogComment> getupcmt(int upid);
+    
+    /**
+     * 模糊查找某up收到的评论
+     * */
+    List<BlogComment> getupcmtlike(BlogComment record);
+    
+    /**
+     * 获取全部comment
+     * 包括被删除的
+     * */
+	List<BlogComment> selectrealall();
+	
+	 /**
+     * 获取某up的全部comment
+     * 包括被删除的
+     * */
+	List<BlogComment> selectupreal(int userid);
 }

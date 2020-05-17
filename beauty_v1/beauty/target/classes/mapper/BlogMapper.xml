@@ -70,7 +70,7 @@
     select id, title, userid, typeid, content, createtime, modifytime, rec_flag, pic1, 
     pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
     from blog
-    where id = #{id,jdbcType=INTEGER} and del_flag=1
+    where id = #{id,jdbcType=INTEGER} 
 			<![CDATA[ and createtime <= NOW()	]]>
   </select>
   
@@ -87,9 +87,19 @@
 		select id, title, userid, typeid, content, createtime, modifytime,
 		rec_flag, pic1, pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
 		from blog
-		where title like concat('%',#{title,jdbcType=VARCHAR},'%')
+		where (title like concat('%',#{title,jdbcType=VARCHAR},'%') OR  id LIKE concat('%',#{title,jdbcType=VARCHAR})
 		and del_flag=1
 			<![CDATA[ and createtime <= NOW()	]]>
+	</select>
+	
+	<!-- 模糊查找某up的blog -->
+	<select id="selectuplike" resultMap="BaseResultMap">
+		select id, title, userid, typeid, content, createtime, modifytime,
+		rec_flag, pic1, pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
+		from blog
+		where userid=#{upid}
+		and (title like concat('%',#{keyword},'%') OR id LIKE  concat('%',#{keyword},'%'))
+		and del_flag=1
 	</select>
 
 	<!-- 查找推荐列表 -->
@@ -122,6 +132,7 @@
 		ORDER BY stars DESC
 	</select>
 
+	<!-- 获取关注up主一周内更新的blog -->
 	<select id="selectlatestblog" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select id, title, userid, typeid, content, createtime, modifytime, rec_flag, pic1,
 		pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
@@ -131,5 +142,23 @@
 			AND createtime BETWEEN DATE_SUB(CURDATE(),INTERVAL 3 DAY) and NOW();
 		 ]]>
 	</select>
+	
+  	<!-- 获取全部blog包括被删除的 -->
+  	<select id="selectrealall" resultMap="BaseResultMap">
+	    select id, title, userid, typeid, content, createtime, modifytime, rec_flag, pic1, 
+	    pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
+	    from blog
+	    where <![CDATA[  createtime <= NOW()	]]>
+  </select>
+  
+ 	<!-- 获取某up的全部blog包括被删除的 -->
+ 	<select id="selectupreal" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	    select id, title, userid, typeid, content, createtime, modifytime, rec_flag, pic1, 
+	    pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
+	    from blog
+	    where userid = #{userid,jdbcType=INTEGER}
+			<![CDATA[ and createtime <= NOW()	]]>
+		ORDER BY createtime DESC
+  </select>
   
 </mapper>

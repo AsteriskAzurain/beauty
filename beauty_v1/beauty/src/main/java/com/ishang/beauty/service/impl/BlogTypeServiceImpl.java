@@ -46,4 +46,15 @@ public class BlogTypeServiceImpl implements BlogTypeService {
 		return dao.selectByPrimaryKey(id);
 	}
 
+	@Override
+	public List<BlogType> findres() {
+		return dao.selectres();
+	}
+
+	@Override
+	public int undodelete(BlogType record) {
+		record.setDelFlag(true);
+		return updateone(record);
+	}
+
 }

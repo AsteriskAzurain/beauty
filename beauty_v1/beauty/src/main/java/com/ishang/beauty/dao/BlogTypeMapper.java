@@ -18,4 +18,9 @@ public interface BlogTypeMapper {
      * 模糊查找
      * */
     List<BlogType> selectlike(BlogType record);
+    
+    /**
+     * 查找被删除的记录
+     * */
+    List<BlogType> selectres();
 }

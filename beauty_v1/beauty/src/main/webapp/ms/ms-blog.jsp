@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"  isELIgnored="false"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,18 +17,13 @@
 
     <!-- main wrapper -->
     <div class="dashboard-main-wrapper">
-		<% 
-			String role=request.getAttribute("role").toString();
-			int roleid=3;
-			if(role.equals("admin")) roleid=1;
-		%>
-		<script type="text/javascript">
-			var roleid =<%=roleid %>
-		</script>
 		
         <!-- left sidebar -->
+		<script type="text/javascript">
+			//var roleid = ${roleid}
+			var roleid=<%=session.getAttribute("roleid")%>
+		</script>
 		<script type="text/javascript" src="<%=path %>/js/ms/sidebar.js"></script>
-
         <!-- end left sidebar -->
         
         <!-- wrapper  -->
@@ -38,7 +33,7 @@
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="page-header">
-                            <h2 class="pageheader-title">博文管理</h2>
+                            <h2 class="pageheader-title">博客管理</h2>
                         </div>
                     </div>
                 </div>
@@ -109,20 +104,24 @@
 		$(window).on('load', function(){
 			
 			$("#sidebar").find("a").removeClass("active");
-			$("#user-admin a").addClass("active");
+			$("#blog-admin a").addClass("active");
+			$("#blog-up a").addClass("active");
 
 			loadpagebtn("#pagehandle")
 			$("#pagehandle").find("li").addClass("btn")
 			gettable(1)
 			
 			$("#backsearch").click(function() {
+				var roleid=<%=session.getAttribute("roleid")%>
+				var upid=<%=session.getAttribute("SESSION_UserID")%>
+				if(roleid==1) upid=0;
 				var keyword=$("#keyword").val()
 				//alert(keyword)
 				$.ajax({
 					url: '<%=path %>/back/search',
 					type: 'get',
 					dataType:'JSON',
-					data:{"keyword": encodeURI(keyword) }  ,
+					data:{"keyword": encodeURI(keyword), "upid": upid }  ,
 					success:function(response,status,xhr){
 						console.log(response)
 						console.log(status)
@@ -142,32 +141,52 @@
 				});
 			});
 			
+			var msg="<%=request.getAttribute("msg")%>"
+			if(msg!=null && msg!='null' && msg!='') alert(msg)
+			
 		});
 				
 		function gettable(pn) {
+			var roleid=<%=session.getAttribute("roleid")%>
+			var upid=<%=session.getAttribute("SESSION_UserID")%>
+			if (roleid==3){
+				//alert(roleid)
+				var target = "<%=path %>/back/getbyid";
+				var data = {
+						"pn" : pn,
+						"upid" : upid
+					};
+			}else{
+				var target = "<%=path %>/back/getall";
+				var data = {
+						"pn" : pn
+					};
+			}
+			console.info(data)
+			//alert(JSON.stringify(data))
 			$.ajax({
-				url: '<%=path %>/blog/getall',
+				url: target,
 				type: 'get',
 				dataType:'JSON',
-				data: {'pn':pn} ,
+				data: data,
+				contentType : 'application/json',
 				success:function(response,status,xhr){
 					console.log(response);
 					console.log(status);
 					console.log(xhr);
 					writetable(response);
-					if(pn == 1){
-						console.info(response);
-						pageload(gettable,response,1);
-					}
-					afterajax();
+					var cpn=response.pageinfo.pageNum
+					pageload(gettable,response,cpn);
+					addcpn(cpn);
+					afterajax(target);
 				},
 				error:function(){
 					alert('error');
 				}
 			});
 		}
-
-		function afterajax() {
+		
+		function afterajax(target) {
 			$("#pagehandle  a").click(function() {
 				//alert("hello")
 				// #numpage > li:nth-child(2) > a
@@ -184,12 +203,21 @@
 			$(".btn-del").click(function() {
 				var strid=$(this).attr("name");
 				if (confirm("确认要删除吗？")) {
-				    alert("已删除");
-				    location.reload();
+				    window.location.href="<%=path%>/back/deleteblog?blogid="+strid
 				  } else {
 				    alert("已取消");
 				  }
 			});
+			
+			$(".btn-res").click(function() {
+				var strid=$(this).attr("name");
+				if (confirm("确认要恢复吗？")) {
+				    window.location.href="<%=path%>/back/undodelblog?blogid="+strid
+				  } else {
+				    alert("已取消");
+				  }
+			});
+			
 		}
 	</script>
 

@@ -59,7 +59,10 @@ public class BlogServiceImpl implements BlogService {
 
 	@Override
 	public List<Blog> findbyentity(Blog record) {
-		return dao.selectlike(record);
+		List<Blog> rst = new ArrayList<Blog>();
+		if(record.getUserid()>0) rst=dao.selectuplike(record.getUserid(), record.getTitle());
+		else rst=dao.selectlike(record);
+		return rst;
 	}
 
 	@Override
@@ -148,6 +151,22 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public List<BlogStar> findstarbyentity(BlogStar record) {
 		return stardao.selectbyentity(record);
+	}
+
+	@Override
+	public List<Blog> findrealall() {
+		return dao.selectrealall();
+	}
+
+	@Override
+	public int undodelete(Blog record) {
+		record.setDelFlag(true);
+		return updateone(record);
+	}
+
+	@Override
+	public List<Blog> findupreal(int userid) {
+		return dao.selectupreal(userid);
 	}
 
 }

@@ -15,7 +15,13 @@
 		<result column="del_flag" jdbcType="BIT" property="del_flag" />
 	</resultMap>
 	
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	<update id="deleteByPrimaryKey" parameterType="com.ishang.beauty.entity.User">
+		update user
+		set del_flag =0
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteByID" parameterType="java.lang.Integer">
 		delete from user
 		where id = #{id,jdbcType=INTEGER}
 	</delete>

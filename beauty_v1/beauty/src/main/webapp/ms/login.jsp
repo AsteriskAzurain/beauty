@@ -40,7 +40,7 @@
 				<span class="splash-description">欢迎登录后台管理系统</span>
 			</div>
             <div class="card-body">
-                <form action="<%=path %>/back/login" method="post">
+                <form action="<%=path %>/back/loginaction" method="post">
                     <div class="form-group">
                         <input class="form-control form-control-lg" id="username" name="username" type="text" placeholder="请输入用户名" autocomplete="off">
                     </div>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-group">
                         <label class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" name="reb"><span class="custom-control-label">记住密码</span>
+                            <input id="customCheck" class="custom-control-input" type="checkbox" name="reb"><span class="custom-control-label">记住密码</span>
                         </label>
                     </div>
                     <h5>${msg }</h5>
@@ -67,5 +67,29 @@
     <script src="<%=path%>/js/jquery/jquery.min.js"></script>
     <script src="<%=path%>/js/bootstrap/bootstrap.bundle.js"></script>
 	<script src="<%=path%>/js/custom/getcookie.js"></script>
+	
+	<script type="text/javascript">
+		$(window).on('load', function(){
+			var username=<%=request.getAttribute("SESSION_UserName")%>
+			var pswd=<%=request.getAttribute("SESSION_PassWord") %>
+			$("#username").val(username)
+			if(username!=null && pswd!=null){
+				$("#password").val(pswd)
+			}
+			var cookiestr=getCookie("backuser");
+			if(cookiestr!=""){
+				$("#customCheck").prop("checked",false);
+				cookiestr=cookiestr.substring(0,cookiestr.length-1);
+				var username=cookiestr.split("#")[0];
+				var password=cookiestr.split("#")[1];
+				username=decodeURIComponent(username)
+				$("#username").val(username);
+				if(password!="1") {
+					$("#password").val(password);
+					$("#customCheck").prop("checked",true);
+				}
+			}
+		});
+	</script>
 </body>
 </html>
