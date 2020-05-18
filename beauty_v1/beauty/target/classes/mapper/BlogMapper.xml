@@ -149,6 +149,7 @@
 	    pic_url_1, pic2, pic_url_2, pic3, pic_url_3, likenum, del_flag
 	    from blog
 	    where <![CDATA[  createtime <= NOW()	]]>
+	    ORDER BY createtime DESC
   </select>
   
  	<!-- 获取某up的全部blog包括被删除的 -->

@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>${ulist.username} 的 主页</title>
+<title>${uplist[0].username} 的 主页</title>
 <%
 	String path = request.getContextPath();
 %>
@@ -97,7 +97,7 @@
 				<c:forEach items="${uplist}" var="ulist" begin="0" end="0">
 					<div class="col-lg-12 mt-5 row">
 						<div class="col-lg-2">
-							<img alt="" src="<%=path%>/<c:out value="${ulist.profileimg}" />" style="max-width: 100px;">
+							<img alt="" src="<%=path%>/<c:out value="${ulist.profileimg}" />" style="max-width: 100px;" class="img-thumbnail">
 						</div>
 						<div class="col-lg-8  ">
 							<h2 class="mb-4">

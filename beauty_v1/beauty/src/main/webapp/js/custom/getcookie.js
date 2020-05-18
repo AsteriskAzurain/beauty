@@ -9,9 +9,11 @@ function getCookie(cookiename) {
 			ind = ind.substring(1);
 
 		var saf = ind.length;
-		if (ind.indexOf(name) != -1)
-			return ind.substring(name.length, ind.length);
-
+		if (ind.indexOf(name) != -1){
+			var rststr=ind.substring(name.length, saf)
+			console.info("cookiestr:"+rststr)
+			return rststr
+		}
 	}
 	return "";
 

@@ -1000,6 +1000,9 @@ Borders
 
 .text-muted {
     color: #7171a6 !important;
+    width: 100%;
+    height: 3em;
+    border: none;
 }
 
 .rating-color {
@@ -6019,7 +6022,7 @@ Vertical Timeline - by CodyHouse.co
 }
 
 .dashboard-main-wrapper .main-content {
-    margin-left: 266px;
+    /* margin-left: 266px; */
     width: auto;
 }
 

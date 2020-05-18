@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>xx 的 主页</title>
+<title>${uplist[0].username} 的 主页</title>
 
 	<script>
 		addEventListener("load", function () {

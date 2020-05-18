@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.apache.commons.io.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -100,6 +102,11 @@ public class ManageSystemController {
 	public String tocmtUP(Model model) {
 		return "../ms/ms-comment.jsp";
 	}
+	
+	@RequestMapping("/addblog")
+	public String toaddblog(Model model) {
+		return "../ms/ms-addblog.jsp";
+	}
 	//------------------------------------------------------
 	
 	// 业务处理
@@ -136,13 +143,13 @@ public class ManageSystemController {
 			// 如果记住密码设置cookie
 			if (re) {
 				session.setAttribute("SESSION_PassWord", result.get(0).getPassword());
-				Cookie userCookie = new Cookie("backuser", loginInfo.toString());
+				Cookie userCookie = new Cookie("back", loginInfo.toString());
 				// 设置保存7天cookie
 				userCookie.setMaxAge(7 * 24 * 60 * 60);
 				userCookie.setPath("/");
 				response.addCookie(userCookie);
 			} else {// 没有选中记住密码，删除cookie
-				Cookie newCookie = new Cookie("backuser", loginInfo2.toString());
+				Cookie newCookie = new Cookie("back", loginInfo2.toString());
 				newCookie.setMaxAge(7 * 24 * 60 * 60);
 				newCookie.setPath("/");
 				// 覆盖之前的userCookie
@@ -436,5 +443,47 @@ public class ManageSystemController {
 		if(cmtservice.undodel(record)>0) request.setAttribute("msg", "恢复成功");
 		else request.setAttribute("msg", "恢复失败");
 		return "../ms/ms-comment.jsp";
+	}
+	
+	@RequestMapping(value = "/addblog", method = RequestMethod.POST)
+	public String addblog(HttpServletRequest request, Model model,  Blog record) throws UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
+		Optional<Blog> nullobj = Optional.ofNullable(record);
+		if(nullobj.isPresent()) {
+			if(record.getUserid()==null) record.setUserid(3);
+			if(record.getTitle().equals("<p><br></p>")) record.setTitle("暂无标题");
+			else record.setTitle(EncodingTool.encodeStr(record.getTitle()));
+			if(record.getContent()!=null) record.setContent(EncodingTool.encodeStr(record.getContent()));
+			else record.setContent("暂无内容");
+			record.setCreatetime(new Date());
+			record.setDelFlag(true);
+			record.setRecFlag(false);
+			record.setLikenum(0);
+			record=nullblogpic(record);
+			System.out.println(record);
+			blogservice.addone(record);
+		}
+		return "../ms/ms-blog.jsp";
+	}
+	
+	public Blog nullblogpic(Blog record) {
+		//TODO 上传图片
+		String defaultpic="暂无描述";
+		String defaulturl="images/blogimg/u8.png";
+		if(record.getPic1()==null || record.getPic1()=="") record.setPic1(defaultpic);
+		if(record.getPic2()==null || record.getPic2()=="") record.setPic2(defaultpic);
+		if(record.getPic3()==null || record.getPic3()=="") record.setPic3(defaultpic);
+		if(record.getPicUrl1()==null || record.getPicUrl1()=="") record.setPicUrl1(defaulturl);
+		if(record.getPicUrl2()==null || record.getPicUrl2()=="") record.setPicUrl2(defaulturl);
+		if(record.getPicUrl3()==null || record.getPicUrl3()=="") record.setPicUrl3(defaulturl);
+		return record;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/loadtype", method = RequestMethod.GET)
+	public Map<String, List<BlogType>> loadtype() {
+		Map<String, List<BlogType>> map = new HashMap<String, List<BlogType>>();
+		map.put("typemap", typeservice.findall());
+		return map;
 	}
 }

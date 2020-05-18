@@ -149,13 +149,13 @@
 			    <div id="basic-carousel" class="carousel slide">
 			      <div class="carousel-inner">
 			        <div class="item active">
-			          	<h2 class="fade-down centered">pic 1</h2>
+			          	<h2 class="fade-down centered">${thisblog.pic1 }</h2>
 			        </div>
 			        <div class="item">
-			          	<h2 class="fade-down centered">pic 2</h2>
+			          	<h2 class="fade-down centered">${thisblog.pic2 }</h2>
 			        </div>
 			        <div class="item">
-			          	<h2 class="fade-down centered">${thisblog.id }</h2>
+			          	<h2 class="fade-down centered">${thisblog.pic3 }</h2>
 			        </div>
 			      </div>
 			      <a class="left carousel-control" href="#basic-carousel" data-slide="prev">

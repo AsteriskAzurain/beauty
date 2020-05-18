@@ -76,7 +76,7 @@
 			if(username!=null && pswd!=null){
 				$("#password").val(pswd)
 			}
-			var cookiestr=getCookie("backuser");
+			var cookiestr=getCookie("back");
 			if(cookiestr!=""){
 				$("#customCheck").prop("checked",false);
 				cookiestr=cookiestr.substring(0,cookiestr.length-1);
