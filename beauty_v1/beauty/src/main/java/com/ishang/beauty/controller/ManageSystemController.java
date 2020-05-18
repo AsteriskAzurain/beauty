@@ -486,4 +486,38 @@ public class ManageSystemController {
 		map.put("typemap", typeservice.findall());
 		return map;
 	}
+	
+	@RequestMapping(value = "/editblog", method = RequestMethod.GET)
+	public String editaction(HttpServletRequest request, Model model,  @RequestParam Integer blogid) throws UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
+		Blog blog = blogservice.findbyid(blogid);
+		Optional<Blog> nullobj = Optional.ofNullable(blog);
+		if(nullobj.isPresent()) {
+			request.setAttribute("thisblog", blog);
+		}
+		return "../ms/ms-editblog.jsp";
+	}
+	
+	@RequestMapping(value = "/updateblog", method = RequestMethod.POST)
+	public String updblog(HttpServletRequest request, Model model,  Blog record) throws UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
+		Optional<Blog> nullobj = Optional.ofNullable(record);
+		if(nullobj.isPresent() && record.getId()!=null) {
+			Blog old = blogservice.findbyid(record.getId());
+			System.out.println(old);
+			if(record.getUserid()==null) record.setUserid(old.getId());
+			if(record.getTitle().equals("<p><br></p>")) record.setTitle(old.getTitle());
+			else record.setTitle(EncodingTool.encodeStr(record.getTitle()));
+			if(record.getContent()!=null) record.setContent(EncodingTool.encodeStr(record.getContent()));
+			else record.setContent(old.getContent());
+			record.setModifytime(new Date());
+			
+			System.out.println(record);
+			blogservice.updateone(record);
+			request.setAttribute("msg", "修改成功");
+		}else {
+			request.setAttribute("msg", "修改失败");
+		}
+		return "../ms/ms-blog.jsp";
+	}
 }
