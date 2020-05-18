@@ -197,13 +197,13 @@
 			
 			$(".btn-upd").click(function() {
 				var strid=$(this).attr("name");
-				alert(strid)
+				window.location.href="<%=path%>/back/editblog?blogid="+strid
 			});
 			
 			$(".btn-del").click(function() {
 				var strid=$(this).attr("name");
 				if (confirm("确认要删除吗？")) {
-				    window.location.href="<%=path%>/back/deleteblog?blogid="+strid
+				    window.location.href="<%=path%>/back/editblog?blogid="+strid
 				  } else {
 				    alert("已取消");
 				  }

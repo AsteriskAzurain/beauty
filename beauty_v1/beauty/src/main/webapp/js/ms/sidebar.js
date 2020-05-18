@@ -50,8 +50,8 @@ if(roleid==1){
 	document.writeln("	创作中心");
 	document.writeln("</li>");
 	document.writeln("<li id=\'add-up\' class=\'nav-item\'>");
-	document.writeln("	<a class=\'nav-link\' href=\'#\'>");
-	document.writeln("		<i class=\'fa fa-fw fa-list-alt\'></i>添加文章");
+	document.writeln("	<a class=\'nav-link\' href=\'addblog\'>");
+	document.writeln("		<i class=\'fa fa-fw fa-list-alt\'></i>添加博客");
 	document.writeln("	</a>");
 	document.writeln("</li>");
 	document.writeln("<li id=\'blog-up\' class=\'nav-item\'>");

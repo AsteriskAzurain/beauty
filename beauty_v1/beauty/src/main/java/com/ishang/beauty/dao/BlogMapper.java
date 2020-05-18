@@ -19,6 +19,12 @@ public interface BlogMapper {
     int updateByPrimaryKey(Blog record);
     
     /**
+     * 自动生成的update
+     * 区别于上一个的局部更新
+     * */
+    int updateByPrimaryKeyfull(Blog record);
+    
+    /**
      * 模糊查找
      * */
     List<Blog> selectlike(Blog record);
