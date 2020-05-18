@@ -156,7 +156,20 @@ public class ManageSystemController {
 				response.addCookie(newCookie);
 			}
 			int roleid = result.get(0).getRoleid();
-			if(roleid==2) return "../index";
+			if(roleid==2) {
+				if (re) {
+					Cookie userCookie = new Cookie("user", loginInfo.toString());
+					userCookie.setMaxAge(7 * 24 * 60 * 60);
+					userCookie.setPath("/");
+					response.addCookie(userCookie);
+				} else {
+					Cookie newCookie = new Cookie("user", loginInfo2.toString());
+					newCookie.setMaxAge(7 * 24 * 60 * 60);
+					newCookie.setPath("/");
+					response.addCookie(newCookie);
+				}
+				return "../index";
+			}
 			else { 
 				session.setAttribute("roleid", roleid);
 				return "../back/index"; 

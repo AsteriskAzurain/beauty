@@ -7088,7 +7088,7 @@ Media Query
 	margin: 30px;
 }
 
-#pagehandle ul li {
+/* #pagehandle ul li {
     border: solid 0.5px grey;
     padding: 5px 15px;
 }
@@ -7096,7 +7096,7 @@ Media Query
 #pagehandle li.active a {
     color: red;
     font-weight: bold;
-}
+} */
 
 .restoremodel{
     height: 500px;

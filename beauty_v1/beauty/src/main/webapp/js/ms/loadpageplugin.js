@@ -11,13 +11,13 @@
  * @desc 载入页码按钮
  */
 function loadpagebtn(obj){
-	var temp="<ul id='prepage' class='pagination'>"+
-        		"<li><a>首页</a></li>"+
-        		"<li><a>上一页</a></li></ul>"+
+	var temp="<ul id='prepage' class='pagination pagination'>"+
+        		"<li class='page-item'><a class='page-link'>首页</a></li>"+
+        		"<li class='page-item'><a class='page-link'>上一页</a></li></ul>"+
         		"<ul id='numpage' class='pagination'></ul>"+
         		"<ul id='nextpage' class='pagination'>"+
-        		"<li><a>下一页</a></li>"+
-        		"<li><a>尾页</a></li></ul>";
+        		"<li class='page-item'><a class='page-link'>下一页</a></li>"+
+        		"<li class='page-item'><a class='page-link'>尾页</a></li></ul>";
     if($(obj+"").find('ul').length<=0){
     	$(obj+"").append(temp);
     }else{
@@ -72,7 +72,7 @@ function pageload(func,data,curpage){
 	$numobj.empty();
 	// 如果页码arr很短 就全部显示
 	$.each(pagenumarr,function(i,e){
-		pagenumtemp+="<li><a href='#' name='"+e+"'>"+e+"</a></li>";
+		pagenumtemp+="<li  class='page-item'><a href='#'  class='page-link' name='"+e+"'>"+e+"</a></li>";
 	});
 	$numobj.append(pagenumtemp);
 	/*if(pagenumarr.length>5){

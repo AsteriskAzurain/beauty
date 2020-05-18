@@ -109,7 +109,7 @@
 			$("#cmt-up a").addClass("active");
 			
 			loadpagebtn("#pagehandle")
-			$("#pagehandle").find("li").addClass("btn")
+			//$("#pagehandle").find("li").addClass("btn")
 			
 			gettable(1,"")
 			
